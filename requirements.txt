@@ -1,0 +1,11 @@
+flask
+flask_mail
+itsdangerous
+sqlite3
+werkzeug
+mongo
+pymongo
+PyNaCl
+certifi
+schedule
+selenium
