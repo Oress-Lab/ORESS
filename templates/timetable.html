@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/c.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/now-ui-kit.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css.map') }}">
+    
+    <title>Timetable</title>
+</head>
+<body class="bg-gray-100">
+
+    <nav class="bg-[#2C2F33] p-2 shadow-none">
+        <!-- Mobile Navigation -->
+        <div class="flex items-center justify-between lg:hidden">
+            <!-- Left: Menu Button -->
+            <button id="mobile-menu-button" class="focus:outline-none p-2" type="button">
+                <img src="{{ url_for('static', filename='assets/menuIcon.svg') }}" alt="Menu Icon" width="24" height="24">
+            </button>
+
+            <!-- Right: Logo -->
+            <img src="{{ url_for('static', filename='assets/LOGO.svg') }}" alt="Logo" width="60" height="60">
+        </div>
+
+        <!-- Mobile Menu (Hidden by default) -->
+        <div id="mobile-menu" class="hidden lg:hidden bg-[#2C2F33] absolute left-0 right-0 z-50 border-t border-gray-700">
+            <div class="px-4 py-3 space-y-3">
+                <!-- Campus Selector in Mobile Menu -->
+                <div class="py-2 border-b border-gray-700">
+                    <label class="block text-white text-sm mb-2">Select Campus:</label>
+                    <form id="mobile-campus-form" method="POST" action="/change_campus">
+                        <select name="campus" onchange="this.form.submit()" 
+                                class="w-full bg-white text-gray-800 text-sm rounded-md px-2 py-1 border border-gray-300">
+                            <option value="main" {% if selected_campus == 'main' %}selected{% endif %}>Main Campus</option>
+                            <option value="north_lebanon" {% if selected_campus == 'north_lebanon' %}selected{% endif %}>North Lebanon Campus</option>
+                            <option value="shouf" {% if selected_campus == 'shouf' %}selected{% endif %}>Shouf Campus</option>
+                        </select>
+                    </form>
+                </div>
+                
+                <!-- Navigation Links -->
+                <a href="{{ url_for('auth.index') }}" class="block px-2 py-2 text-white hover:bg-gray-700 rounded-md">Home</a>
+                <a href="{{ url_for('static_pages.about') }}" class="block px-2 py-2 text-white hover:bg-gray-700 rounded-md">About</a>
+                <a href="{{ url_for('contact.show_contact') }}" class="block px-2 py-2 text-white hover:bg-gray-700 rounded-md">Contact</a>
+                <a href="{{ url_for('static_pages.help') }}" class="block px-2 py-2 text-white hover:bg-gray-700 rounded-md">Help</a>
+                <hr class="border-gray-700 my-2">
+                <a href="#" class="block px-2 py-2 text-white hover:bg-gray-700 rounded-md">Logout</a>
+            </div>
+        </div>
+
+        <!-- Desktop Navigation (unchanged) -->
+        <div class="hidden lg:flex lg:items-center lg:justify-between">
+            <img src="../static/assets/LOGO.svg" alt="Logo" width="80" height="80" class="ml-3">
+            <div class="hidden lg:flex lg:ml-6">
+                <ul class="flex space-x-5">
+                    <li>
+                        <a href="{{ url_for('auth.index') }}" class="nav-link" target="_blank">Home</a>
+                    </li>
+                    <li>
+                        <a href="{{ url_for('static_pages.about') }}" class="nav-link" target="_blank">About</a>
+                    </li>
+                    <li>
+                        <a href="{{ url_for('contact.show_contact') }}" class="nav-link" target="_blank">Contact</a>
+                    </li>
+                    <li>
+                        <a href="{{ url_for('static_pages.help') }}" class="nav-link" target="_blank">Help</a>
+                    </li>
+                </ul>
+            </div>
+            
+            <div class="flex items-center space-x-4 ml-auto">
+                <!-- Change Campus Dropdown -->
+                <span class="text-white text-sm font-lato">Your Campus:</span>
+                <form id="campus-form" method="POST" action="/change_campus">
+                    <select name="campus" onchange="this.form.submit()" class="bg-white text-gray-800 text-sm rounded-md px-2 py-1 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-[#60C6D8]">
+                        <option value="main" {% if selected_campus == 'main' %}selected{% endif %}>Main Campus</option>
+                        <option value="north_lebanon" {% if selected_campus == 'north_lebanon' %}selected{% endif %}>North Lebanon Campus</option>
+                        <option value="shouf" {% if selected_campus == 'shouf' %}selected{% endif %}>Shouf Campus</option>
+                    </select>
+                </form>
+        
+                <!-- Logout Button -->
+                <a href="#" class="nav-link">Logout</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Mobile View Container (after nav) -->
+    <div class="lg:hidden">
+        <div class="bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 p-4 mb-4">
+            <p class="font-bold">Mobile View Under Development</p>
+            <p>Please use desktop view for full functionality. Mobile version coming soon!</p>
+        </div>
+
+        <!-- Search Section -->
+        <div class="sticky top-0 z-20 bg-white shadow-md">
+            <div class="p-3">
+                <form id="mobile-search-form" class="flex flex-col space-y-2">
+                    <div class="flex items-center space-x-2">
+                        <input type="text" 
+                               name="search_query"
+                               id="mobile-search-input"
+                               placeholder="Search courses..." 
+                               class="flex-1 p-2 text-sm border border-gray-300 rounded-md">
+                        <button type="submit" class="p-2 bg-blue-500 text-white rounded-md">
+                            <img src="{{ url_for('static', filename='assets/search1.svg') }}" alt="Search" class="w-4 h-4">
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Search Results -->
+            <div class="max-h-40 overflow-y-auto border-t border-gray-100">
+                <div id="mobile-search-results" class="p-2">
+                    <!-- Search results will be dynamically inserted here -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Mobile Timetable -->
+        <div class="mt-2 px-2">
+            <div class="bg-white rounded-lg shadow-md overflow-hidden">
+                <!-- Timetable Header -->
+                <div class="flex border-b sticky top-0 bg-white z-10">
+                    <div class="w-12 p-2"></div>
+                    <div class="grid grid-cols-5 flex-1">
+                        <div class="p-2 text-center text-sm font-medium">Mon</div>
+                        <div class="p-2 text-center text-sm font-medium">Tue</div>
+                        <div class="p-2 text-center text-sm font-medium">Wed</div>
+                        <div class="p-2 text-center text-sm font-medium">Thu</div>
+                        <div class="p-2 text-center text-sm font-medium">Fri</div>
+                    </div>
+                </div>
+
+                <!-- Timetable Body -->
+                <div class="relative">
+                    {% for hour in range(8, 21) %}
+                    <div class="flex border-b" data-hour="{{ hour }}">
+                        <!-- Time Column -->
+                        <div class="w-12 p-1 text-xs text-gray-600 text-center border-r sticky left-0 bg-white flex items-start justify-center pt-1">
+                            {% if hour > 12 %}
+                                {{ hour - 12 }}:00 
+                            {% elif hour == 12 %}
+                                {{ hour }}:00 
+                            {% else %}
+                                {{ hour }}:00
+                            {% endif %}
+                        </div>
+                        <!-- Course Columns -->
+                        <div class="grid grid-cols-5 flex-1">
+                            {% for day in ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'] %}
+                            <div class="p-2 border-r border-gray-200 h-24">
+                                <div class="course-info" data-day="{{ day }}" data-hour="{{ hour }}">
+                                    <!-- Add your course info here -->
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Add Mobile Favorites Section -->
+        <div class="mt-4 px-2">
+            <div class="favorites-section bg-white p-4 shadow-md rounded-lg" id="mobile-favorites-section">
+                <h3 class="font-bold text-lg flex items-center">
+                    Favorites
+                    <img src="{{ url_for('static', filename='assets/collapse.svg') }}" alt="Expand Icon" class="ml-auto w-4 h-4 cursor-pointer" onclick="toggleSection('mobile-favorites-section', this)">
+                </h3>
+                <div class="favorites-content">
+                    <ul id="mobile-favorite-courses" class="list-none space-y-2">
+                        <!-- Each favorite course will be dynamically added as an <li> element here -->
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Desktop View (hide on mobile) -->
+    <div class="hidden lg:block">
+        <h1 class="text-left indent-5 text-black text-base font-semibold my-4">
+            Enrolled in {{ semester }}-{{ year }}. For more info click on <u>'Help'</u>.
+        </h1>
+        
+        <div class="container mx-auto flex space-x-6 items-start">
+            <!-- Desktop Search Section -->
+            <div class="search-section w-1/4 bg-white p-4 shadow-md rounded-lg overflow-y-auto">
+                <form id="search-form" class="mb-4 flex flex-col space-y-2">
+                    <div class="flex items-center">
+                        <input type="text" 
+                               name="search_query" 
+                               id="desktop-search-input"
+                               placeholder="Type course code/name..." 
+                               class="block w-full p-2 border border-gray-300 rounded-md">
+                        <button type="submit" class="ml-2 p-2 bg-blue-500 hover:bg-blue-600 text-white rounded-md focus:outline-none">
+                            <img src="{{ url_for('static', filename='assets/search1.svg') }}" alt="Search" class="w-5 h-5">
+                        </button>
+                    </div>
+                    <div class="text-xs text-gray-500">
+                        <p>Expert Search:</p>
+                        <p>#MWF - Search by days (M,T,W,R,F)</p>
+                        <p>8:00 - Search by time</p>
+                        <p>Example: CSC #MWF 8:00</p>
+                    </div>
+                </form>
+            
+                <ul class="space-y-4">
+                    {% if courses %}
+                    {% for course in courses %}
+                    <li class="p-4 bg-white rounded-lg shadow flex items-center justify-between cursor-pointer hover:bg-gray-100 transition"
+                        data-course-code="{{ course.course_code }}"
+                        data-course-name="{{ course.course_name }}"
+                        data-course-time="{{ course.time }}"
+                        data-course-room="{{ course.room }}"
+                        data-course-instructor="{{ course.instructor }}"
+                        data-course-prerequisite="{{ course.prerequisite }}"
+                        onmouseover="updateCourseInfo(this); showCourseShadow(this);"
+                        onmouseout="removeCourseShadow();"
+                        onclick="toggleCourseOnTimetable(this);">
+                        
+                        <!-- Left: Checkbox -->
+                        <div class="flex items-center">
+                            <input type="checkbox" 
+                                class="h-5 w-5 text-blue-600 border-gray-300 rounded focus:ring-blue-500 cursor-pointer course-checkbox"
+                                onclick="event.stopPropagation(); toggleCourseSelection(this, '{{ course.course_code }}');">
+                        </div>
+                
+                        <!-- Course Details (name and time) -->
+                        <div class="text-left flex-1 pl-4">
+                            <h4 class="font-semibold text-gray-900">{{ course.course_name }}</h4>
+                            <p class="text-sm text-gray-500">{{ course.time }}</p>
+                        </div>
+                
+                        <!-- Favorite Star Button (moved to the right) -->
+                        <button class="favorite-btn ml-auto p-2" data-course-code="{{ course.course_code }}"
+                            onclick="toggleFavoriteCourse(this, '{{ course.course_code }}', '{{ course.course_name }}', '{{ course.time }}'); event.stopPropagation();">
+                            <img src="/static/assets/star.svg" alt="Favorite Star" class="star-icon w-6 h-6">
+                        </button>
+
+                    </li>
+                    {% endfor %}
+                    {% else %}
+                    <li class="p-4 bg-white rounded-lg shadow-md text-center text-gray-600">No courses found. Try typing the course code or name.</li>
+                    {% endif %}
+                </ul>                                                                                                                                                                      
+            </div>        
+        
+            <!-- Timetable Section -->
+            <div id="schTimes" class="relative w-1/2 bg-white shadow-md rounded-lg overflow-y-auto">
+                <!-- Weekdays Row -->
+                <div id="schDays" class="relative" style="position: sticky; top: 0; background-color: white; z-index: 10;">
+                    <div class="day-header" style="left: 90px; width: 130px;">Monday</div>
+                    <div class="day-header" style="left: 220px; width: 130px; border-right: none;">Tuesday</div>
+                    <div class="day-header" style="left: 360px; width: 130px; border-right: none;">Wednesday</div>
+                    <div class="day-header" style="left: 500px; width: 130px; border-right: none;">Thursday</div>
+                    <div class="day-header" style="left: 640px; width: 130px; border-right: none;">Friday</div>
+                </div>
+                
+        
+                <!-- Timetable lines and time slots -->
+                <div class="relative">
+                    <!-- Vertical day lines -->
+                    <div class="day-line" style="left: 80px; top: 30px; height: 1080px;"></div>
+                    <div class="day-line" style="left: 220px; top: 30px; height: 1080px;"></div>
+                    <div class="day-line" style="left: 360px; top: 30px; height: 1080px;"></div>
+                    <div class="day-line" style="left: 500px; top: 30px; height: 1080px;"></div>
+                    <div class="day-line" style="left: 640px; top: 30px; height: 1080px;"></div>
+                    <div class="day-line" style="left: 780px; top: 30px; height: 1080px;"></div>
+                
+                    <!-- Horizontal hour lines -->
+                    <div class="hour-line" style="top: 72px; width: 715px;"></div>
+                    <div class="hour-line" style="top: 144px; width: 715px;"></div>
+                    <div class="hour-line" style="top: 216px; width: 715px;"></div>
+                    <div class="hour-line" style="top: 288px; width: 715px;"></div>
+                    <div class="hour-line" style="top: 360px; width: 715px;"></div>
+                    <div class="hour-line" style="top: 432px; width: 715px;"></div>
+                    <div class="hour-line" style="top: 504px; width: 715px;"></div>
+                    <div class="hour-line" style="top: 576px; width: 715px;"></div>
+                    <div class="hour-line" style="top: 648px; width: 715px;"></div>
+                    <div class="hour-line" style="top: 720px; width: 715px;"></div>
+                    <div class="hour-line" style="top: 792px; width: 715px;"></div>
+                    <div class="hour-line" style="top: 864px; width: 715px;"></div>
+                    <div class="hour-line" style="top: 936px; width: 715px;"></div>
+                    <div class="hour-line" style="top: 1008px; width: 715px;"></div>
+                    <div class="hour-line" style="top: 1080px; width: 715px;"></div>
+                
+                    <!-- Time labels on the left (moved up by a total of 8px) -->
+                    <span class="time-label absolute" style="top: 64px; left: 20px;">8:00</span>
+                    <span class="time-label absolute" style="top: 136px; left: 20px;">9:00</span>
+                    <span class="time-label absolute" style="top: 208px; left: 20px;">10:00</span>
+                    <span class="time-label absolute" style="top: 280px; left: 20px;">11:00</span>
+                    <span class="time-label absolute" style="top: 352px; left: 20px;">12:00</span>
+                    <span class="time-label absolute" style="top: 424px; left: 20px;">1:00</span>
+                    <span class="time-label absolute" style="top: 496px; left: 20px;">2:00</span>
+                    <span class="time-label absolute" style="top: 568px; left: 20px;">3:00</span>
+                    <span class="time-label absolute" style="top: 640px; left: 20px;">4:00</span>
+                    <span class="time-label absolute" style="top: 712px; left: 20px;">5:00</span>
+                    <span class="time-label absolute" style="top: 784px; left: 20px;">6:00</span>
+                    <span class="time-label absolute" style="top: 856px; left: 20px;">7:00</span>
+                    <span class="time-label absolute" style="top: 928px; left: 20px;">8:00</span>
+                    <span class="time-label absolute" style="top: 1000px; left: 20px;">9:00</span>
+                </div>                                   
+            </div>
+        
+            <!-- Course Info Section -->
+            <div class="course-info-section w-1/4 space-y-4">
+                <!-- SVG Icons row -->
+                <div class="icons-wrapper flex items-center justify-center space-x-4">
+                    <!-- Image Download Button -->
+                    <button id="downloadImageBtn" class="settings-btn" onclick="downloadTimetableImage()">
+                        <img src="{{ url_for('static', filename='assets/download-image.svg') }}" alt="Image Icon" class="small-icon">
+                    </button>
+                
+                    <!-- Settings Button -->
+                    <button class="settings-btn" onclick="openSettings()">
+                        <img src="{{ url_for('static', filename='assets/settings.svg') }}" alt="Settings Icon" class="small-icon">
+                    </button>
+                </div>
+
+                <div class="bg-white p-4 shadow-md rounded-lg relative" id="course-info-section">
+                    <h3 class="font-bold text-lg flex items-center">
+                        Course Information
+                        <img src="{{ url_for('static', filename='assets/collapse.svg') }}" alt="Expand Icon" class="ml-auto w-4 h-4 cursor-pointer" onclick="toggleSection('course-info-section', this)">
+                    </h3>
+                    <div class="course-info-content">
+                        <p id="course-info-message" class="text-gray-700">Hover on a course to see the details.</p>
+                        <p id="course-name" class="text-gray-700 hidden">Course Name: <span class="font-semibold">---</span></p>
+                        <p id="course-time" class="text-gray-700 hidden">Course Time: <span class="font-semibold">---</span></p>
+                        <p id="course-room" class="text-gray-700 hidden">Course Room: <span class="font-semibold">---</span></p>
+                        <p id="course-instructor" class="text-gray-700 hidden">Instructor: <span class="font-semibold">---</span></p>
+                        <p id="course-prerequisite" class="text-gray-700 hidden">Prerequisite: <span class="font-semibold">---</span></p>
+                    </div>
+                </div>
+                
+                <div class="favorites-section bg-white p-4 shadow-md rounded-lg" id="favorites-section">
+                    <h3 class="font-bold text-lg flex items-center">
+                        Favorites
+                        <img src="{{ url_for('static', filename='assets/collapse.svg') }}" alt="Expand Icon" class="ml-auto w-4 h-4 cursor-pointer" onclick="toggleSection('favorites-section', this)">
+                    </h3>
+                    <div class="favorites-content">
+                        <ul id="favorite-courses" class="list-none space-y-2">
+                            <!-- Each favorite course will be dynamically added as an <li> element here -->
+                        </ul>
+                    </div>
+                </div>                                              
+            </div>
+        </div>
+    </div>
+
+    <!-- Overlay and Popup initially hidden -->
+    <div id="blur-overlay" class="blur-background hidden"></div>
+    <div id="settings-popup" class="popup hidden">
+        <h2 class="font-bold text-xl">Settings</h2> <!-- center setting title -->
+        <p>12h/24h format</p> <!-- left side to chose hour-->
+        <p>color palette</p> <!-- right side to choose colors from palette -->
+        <p>COMING SOON !</p>
+        <p>report a bug, request a new feature, please fill out this form 'form link'</p>
+        <div class="page_end">
+            <div class="footer">
+                <div class="bot-footer">
+                    © 2024 ORESS. All Rights Reserved.
+                </div><br/>
+                <div class="nouridio">A project by <a href="#">Kristen W. Kamouh</a></div>
+            </div>
+        </div>
+        <button onclick="closeSettings()" class="mt-4 bg-blue-500 text-white px-4 py-2 rounded">Close</button>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/table.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/search.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/savetb.js') }}"></script>
+
+    <!-- Add html2pdf library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/dom-to-image/2.6.0/dom-to-image.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6HJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+</body>
+</html>

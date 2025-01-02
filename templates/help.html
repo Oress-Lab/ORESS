@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- 
+    ! REDESIGN HELP PAGE. 
+    ? see other ways to design
+-->
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/help.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/now-ui-kit.css') }}">
+    <link href="https://fonts.googleapis.com/css?family=Poppins:300,400,600,700,800,900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:400,600,700,800,900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Lato:300,400,600,700,800,900&display=swap" rel="stylesheet">
+    <title>ORESS Help</title>
+</head>
+
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg bg-transparent">
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <img src="../static/assets/menuIcon.svg" width="20px" height="20px" style="max-width: none !important;">
+        </button>
+        <img src="../static/assets/LOGO.svg" width="80" height="80" class="ml-3">
+        <div class="collapse navbar-collapse" id="navbarSupportedContent" style="margin-left: 20px !important">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item active">
+                    <a class="nav-link" href="{{ url_for('auth.index') }}">Home <span class="sr-only"></span></a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('static_pages.about') }}">About</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('contact.show_contact') }}">Contact</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Help Section -->
+    <div class="container mt-5">
+        <div class="row text-center">
+            <div class="col-12">
+                <h1 class="about-title">Don't know what to do ?</h1>
+                <p class="about-subtitle">Here is everything you need to know!</p>
+            </div>
+        </div>
+
+        <!-- Alternating photo and text cards -->
+        <div class="row justify-content-center align-items-center mb-4">
+            <div class="col-md-6">
+                <div class="card about-card">
+                    <img src="{{ url_for('static', filename='assets/help/main.png') }}"
+                        class="img-fluid card-img-top mb-3" alt="Help image 1">
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="card about-card">
+                    <div class="card-body">
+                        <p class="card-text">Welcome to the main window after logging in! You’ll see three sections: the
+                            search bar, timetable grid, and course info with favorites. Start by selecting your campus
+                            (default: Zouk Mosbeh). Ensure the correct semester and year are displayed; if not, please
+                            reach out to support.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row justify-content-center align-items-center mb-4">
+            <div class="col-md-6 order-md-2">
+                <div class="card about-card">
+                    <img src="{{ url_for('static', filename='assets/help/search_results.png') }}"
+                        class="img-fluid card-img-top mb-3" alt="Help image 2">
+                </div>
+            </div>
+            <div class="col-md-6 order-md-1">
+                <div class="card about-card">
+                    <div class="card-body">
+                        <p class="card-text">In the search bar, type either the course code or name to find available
+                            sections. To add a course to your timetable, click its checkbox; it will appear at the
+                            correct time slot on the grid and also be added to your favorites. To favorite a course
+                            without adding it to the grid, click the star icon.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Alternating photo and text cards -->
+        <div class="row justify-content-center align-items-center mb-4">
+            <div class="col-md-6">
+                <div class="card about-card">
+                    <img src="{{ url_for('static', filename='assets/help/hover.png') }}"
+                        class="img-fluid card-img-top mb-3" alt="Help image 1">
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="card about-card">
+                    <div class="card-body">
+                        <p class="card-text">Hover over any course in the search bar to highlight its position on the
+                            timetable with a shadow effect. This action also shows detailed information about the course
+                            under Course Information, where all relevant details are provided.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row justify-content-center align-items-center mb-4">
+            <div class="col-md-6 order-md-2">
+                <div class="card about-card">
+                    <img src="{{ url_for('static', filename='assets/help/add_course.png') }}"
+                        class="img-fluid card-img-top mb-3" alt="Help image 2">
+                </div>
+            </div>
+            <div class="col-md-6 order-md-1">
+                <div class="card about-card">
+                    <div class="card-body">
+                        <p class="card-text">Start building your schedule by selecting your courses. The favorite
+                            section syncs with the search bar, so toggling a course’s checkbox here will also update it
+                            in the search bar. The same applies to the star icon, ensuring a seamless experience.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Alternating photo and text cards -->
+        <div class="row justify-content-center align-items-center mb-4">
+            <div class="col-md-6">
+                <div class="card about-card">
+                    <img src="{{ url_for('static', filename='assets/help/icon_menu.png') }}"
+                        class="img-fluid card-img-top mb-3" alt="Help image 1">
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="card about-card">
+                    <div class="card-body">
+                        <p class="card-text">In the icon menu above the course info section, explore features that will
+                            soon be available. The numbered icon will give you 3 possibilities for scheduling. The red
+                            PDF icon lets you download the timetable with colors and course placements. The settings
+                            icon will allow customization of course colors and time formats.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row justify-content-center align-items-center mb-4">
+            <div class="col-md-6 order-md-1">
+                <div class="card about-card">
+                    <div class="card-body">
+                        <p class="card-text"><u>COMING SOON!</u> Additional features are on the way, like conflict
+                            prevention for overlapping courses, highlighted by a red border and a warning message. Also,
+                            expert search symbols (e.g., @ for specific times, # for days) will help you tailor your
+                            search experience. Thank you for using ORESS!</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Repeat the pattern as needed for additional steps -->
+    </div>
+
+    <!-- Footer -->
+    <div class="page_end">
+        <div class="footer">
+            <div class="bot-footer">
+                © 2024 ORESS. All Rights Reserved.
+            </div><br />
+            <div class="nouridio">A project by <a href="">Kristen W. Kamouh</a></div>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+        crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+        integrity="sha384-UO2eT0CpHqdSJQ6HJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+        crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+        crossorigin="anonymous"></script>
+    <script src="{{ url_for('static', filename='js/now-ui-kit.min.js') }}"></script>
+</body>
+
+</html>
