@@ -40,7 +40,7 @@ h2.text-center {
 
 /* Contact Card Styling */
 .card {
-    background-color: #2C2F33;
+    background-color: white;
     color: #fff;
     border-radius: 10px;
     padding: 40px;
@@ -58,7 +58,7 @@ h2.text-center {
 
 /* Input Fields - Keep Dark Background */
 .form-control {
-    background-color: #2C2F33; /* Dark background */
+    background-color: white; /* Dark background */
     border: 1px solid #60C6D8;
     color: #fff; /* White text */
     border-radius: 8px;
