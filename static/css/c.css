@@ -1,0 +1,320 @@
+@import url('https://fonts.googleapis.com/css2?family=Lato:wght@400;700&display=swap');
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    margin: 0;
+    padding: 20px;
+}
+
+html, body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    border-top: 3px #60C6D8 solid !important;
+}
+
+#schTimes {
+    transition: border-color 0.3s ease;
+}
+
+.course-shadow {
+    pointer-events: none;
+    z-index: 10;
+    transition: all 0.3s ease;
+}
+
+.nav-link {
+    font-size: 14px;
+    font-family: 'Lato', sans-serif;
+    text-transform: capitalize;
+    color: #fff;
+    margin-right: 20px;
+    background: transparent;
+    transition: color 0.2s ease, font-weight 0.2s ease;
+}
+
+.nav-link:hover {
+    color: #60C6D8;
+    font-weight: bold;
+    background: transparent;
+}
+
+.container {
+    display: flex;
+    height: 100vh; /* Full height of the viewport */
+}
+
+/* In your CSS file or within a <style> tag */
+.filled-star {
+    fill: black;
+}
+
+.search-section,
+.course-info-section,
+#schTimes {
+    flex-grow: 1;
+    overflow-y: auto; /* Enable scrolling inside each section */
+    height: 100%; /* Ensure each section fills the height of the container */
+}
+
+/* Fixing the week day columns */
+.weekdays {
+    display: flex;
+    justify-content: space-between; /* Ensure even spacing between days */
+}
+
+.day-header {
+    flex: 1; /* Make each day take up equal space */
+    text-align: center;
+    padding: 10px 0;
+    border-right: 1px solid #ddd; /* Add separator between days */
+    font-weight: bold;
+    color: #333;
+}
+
+.day-header:last-child {
+    border-right: none; /* Remove border on the last day (Friday) */
+}
+
+/* Timetable */
+#schTimes {
+    width: 950px;
+    border: 1px solid #ddd;
+    background-color: #fff;
+    overflow-y: auto;
+    position: relative;
+}
+
+/* Weekdays container */
+.weekdays {
+    display: flex;
+    justify-content: space-between;
+    position: relative;
+    top: 10px; /* Adjust this to align the days horizontally with the lines */
+}
+
+/* Each day header */
+.day-header {
+    position: absolute;
+    text-align: center;
+    font-weight: bold;
+    top: 0;
+    font-size: 1rem;
+}
+
+/* Remove border-right from day-headers */
+.day-header:last-child {
+    border-right: none;
+}
+
+
+/* Scrollable Search Section */
+.search-section {
+    overflow-y: auto;
+    flex-grow: 1;
+    max-height: 100%;
+}
+
+/* Course Info Section */
+.course-info-section {
+    flex-grow: 1;
+}
+
+/* Vertical day lines */
+.day-line {
+    position: absolute;
+    top: 40px; /* Adjust according to the space for the day headers */
+    width: 1px;
+    background-color: #ddd;
+}
+
+.day-line:first-child {
+    left: 82.5px !important; /* Slightly adjust to connect with the first horizontal line */
+}
+
+.hour-line {
+    position: absolute;
+    left: 70px; /* Align with the start of the grid */
+    width: 900px;
+    height: 1px;
+    background-color: #ddd;
+}
+
+/* Time labels */
+.time-label {
+    position: absolute;
+    font-size: 0.9rem;
+    color: #555;
+}
+
+h1 {
+    text-align: center;
+    color: #333;
+}
+
+
+.course-block {
+    background-color: red;
+    color: white;
+    text-align: center;
+    font-size: 14px;
+    line-height: 1.4;
+    border-radius: 4px;
+    border: 1px solid #333;
+}
+
+/* Full page overlay for background blur */
+.blur-background {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    backdrop-filter: blur(8px); /* Apply the blur effect */
+    z-index: 10; /* Just below the popup */
+    background: rgba(255, 255, 255, 0.5); /* Light transparency */
+}
+
+/* Popup */
+.popup {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 66%; /* Takes 2/3 of the page */
+    background: white;
+    z-index: 20; /* Above the blurred background */
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Hide popup initially */
+.hidden {
+    display: none;
+}
+
+/* Button styling */
+.settings-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+}
+
+/* Align the SVG icons */
+.icons-wrapper {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+}
+
+/* Styles for the timetable container */
+.timetable-container {
+    margin: 20px;
+    padding: 20px;
+    border-radius: 8px;
+    background-color: #fff;
+    color: #333;
+}
+
+/* Border style for the active timetable */
+.timetable-container.active {
+    border: 2px solid #60C6D8; /* Light blue border */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Style for active table button */
+.table-btn.active {
+    border: 2px solid #60C6D8;
+    border-radius: 8px;
+    padding: 5px;
+}
+
+
+/* Size adjustments for SVGs */
+.small-icon {
+    width: 24px;
+    height: 24px;
+}
+
+.page_end {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.footer {
+    background-color: #f8f8f8;
+    padding: 20px;
+}
+
+.bot-footer {
+    font-size: 14px;
+    color: #333;
+}
+
+.nouridio a {
+    text-decoration: none;
+    color: #007BFF;
+}
+
+.nouridio a:hover {
+    text-decoration: underline;
+    color: cornflowerblue;
+}
+
+input[type="checkbox"] {
+    width: 20px;
+    height: 20px;
+    accent-color: blue;
+    margin-right: 10px;
+    cursor: pointer;
+}
+
+/* for the expantion of course info and favorites */
+.course-info-content, .favorites-content {
+    transition: max-height 0.3s ease;
+}
+
+/* Mobile-specific styles */
+@media (max-width: 1024px) {
+    /* Hide desktop layout */
+    .container.mx-auto.flex.space-x-6 {
+        display: none;
+    }
+
+    /* Mobile menu transitions */
+    #mobile-menu {
+        transition: all 0.3s ease-in-out;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    }
+
+    /* Course cards scroll */
+    .overflow-x-auto::-webkit-scrollbar {
+        display: none;
+    }
+
+    /* Day accordion animations */
+    .transform {
+        transition: transform 0.2s ease-in-out;
+    }
+
+    /* Course list scroll snap */
+    .overflow-x-auto {
+        scroll-snap-type: x mandatory;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .inline-block {
+        scroll-snap-align: start;
+    }
+}
+
+/* Preserve desktop styles */
+@media (min-width: 1025px) {
+    .lg\:hidden {
+        display: none;
+    }
+}
+
+
