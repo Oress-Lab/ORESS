@@ -58,8 +58,8 @@ body {
 
 /* About card styling */
 .about-card {
-    background-color: #2C2F33;
-    color: #fff;
+    background-color: white;
+    color: #000000;
     border-radius: 10px !important;
     padding: 20px;
     height: 400px; /* Fixed height */
