@@ -68,7 +68,7 @@ body {
 /* Form section styles */
 .form-section {
     color: #60C6D8 !important;
-    background-color: #2C2F33;
+    background-color: white;
     padding: 20px; /* Reduced padding */
     border-radius: 8px;
     width: 100%;
@@ -79,7 +79,7 @@ body {
 
 /* Reduce the margin for form elements */
 .form-control {
-    background-color: #2C2F33 !important;
+    background-color: white !important;
     color: #fff !important;
     border: 1px solid #60C6D8 !important;
     margin-bottom: 10px; /* Reduced margin between input fields */
@@ -89,7 +89,7 @@ body {
 
 /* Card Styling */
 .card {
-    background-color: #2C2F33; /* Dark grey background */
+    background-color: white; /* Dark grey background */
     color: #fff;
     border-radius: 10px !important; /* Increased border-radius for rounder corners */
     padding: 20px; /* Adjusted padding */
@@ -181,7 +181,7 @@ body {
 .forgot-password {
     display: block;
     margin-bottom: 15px;
-    color: #ffffff;
+    color: black;
     text-decoration: none;
 }
 
