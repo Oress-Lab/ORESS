@@ -6,6 +6,7 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">    
     <link rel="stylesheet" href="{{ url_for('static', filename='css/now-ui-kit.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <link href="https://fonts.googleapis.com/css?family=Poppins:300,400,600,700,800,900&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=Montserrat:400,600,700,800,900&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=Lato:300,400,600,700,800,900&display=swap" rel="stylesheet">
@@ -56,7 +57,10 @@
                 {% endwith %}
                 <form method="POST">
                     <input type="email" name="email" class="form-control" placeholder="Email" required>
-                    <input type="password" name="password" class="form-control" placeholder="Password" required>
+                    <div class="password-container">
+                        <input type="password" name="password" class="form-control" placeholder="Password" id="loginPassword" required>
+                        <i class="fas fa-eye" id="toggleLoginPassword"></i>
+                    </div>
                     <input type="hidden" name="action" value="login">
                     <button type="submit" class="btn btn-primary">Login</button>
                 </form>
@@ -79,7 +83,10 @@
                 <form method="POST">
                     <input type="email" name="email" class="form-control" placeholder="Email" required>
                     <input type="email" name="confirm_email" class="form-control" placeholder="Retype Email" required>
-                    <input type="password" name="password" class="form-control" placeholder="Password" required>
+                    <div class="password-container">
+                        <input type="password" name="password" class="form-control" placeholder="Password" id="signupPassword" required>
+                        <i class="fas fa-eye" id="toggleSignupPassword"></i>
+                    </div>
                     <input type="hidden" name="action" value="signup">
                     <button type="submit" class="btn btn-secondary">Sign Up</button>
                 </form>
@@ -91,7 +98,7 @@
     <div class="page_end">
         <div class="footer">
             <div class="bot-footer">
-                © 2024 ORESS. All Rights Reserved.
+                &copy; <span id="copyright-year"></span> ORESS. All rights reserved.
             </div><br/>
             <div class="nouridio">A project by <a href="#">Kristen W. Kamouh</a></div>
         </div>
@@ -101,5 +108,6 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6HJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
     <script src="{{ url_for('static', filename='js/now-ui-kit.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/extra.js') }}"></script>
 </body>
 </html>
