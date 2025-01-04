@@ -1,62 +1,59 @@
 // Help page content configuration
 const helpContent = {
     'getting-started': {
-        title: 'Getting Started Guide',
+        title: 'Searching for Courses',
         content: `
-            <h3>Basic Navigation</h3>
-            <p>Learn how to navigate through the main features:</p>
+            <h3>How to search for courses ?</h3>
             <ul>
-                <li>Dashboard Overview</li>
-                <li>Using the Search Function</li>
-                <li>Managing Your Profile</li>
+                <li>Using the course code, ex: csc 212.</li>
+                <li>Using the course name, ex: pro design data abstraction I</li>
             </ul>
 
-            <h3>Key Features</h3>
-            <p>Get familiar with the essential tools:</p>
+            <h3>Learn to use the expert search.</h3>
             <ul>
-                <li>Course Selection</li>
-                <li>Schedule Planning</li>
-                <li>Saving Favorites</li>
+                <li>Using '#' in the search with the weekdays will give the available courses on these days. ex: csc 212 #mwf</li>
+                <li>Coming soon. searching with time. Using the '@' symbol, ex: csc 212 @10</li>
             </ul>
+
+            <h3>Adding courses to different sections.</h3>
+            <ul>
+                <li>Using the checkbox in the course element, the course selected will be added to the precise time.</li>
+                <li>Using the star, the courses will be added to the favorite section so you can add and remove with ease.</li>
+            </ul> 
         `
     },
     'advanced-features': {
-        title: 'Advanced Features',
+        title: 'The Timetable',
         content: `
-            <h3>Power User Tools</h3>
-            <p>Discover advanced features to enhance your experience:</p>
+            <h3>Course disposition</h3>
+            <p>MWF or TTH courses are added respecting the session time.</p>
             <ul>
-                <li>Custom Filters</li>
-                <li>Batch Operations</li>
-                <li>Advanced Search Techniques</li>
-            </ul>
-
-            <h3>Tips & Tricks</h3>
-            <p>Learn expert tips to maximize efficiency:</p>
-            <ul>
-                <li>Keyboard Shortcuts</li>
-                <li>Custom Views</li>
-                <li>Time-saving Techniques</li>
+                <img src="/static/assets/help/image.png" 
+                    alt="Course Schedule Example" 
+                    class="help-image"
+                    style="max-width: 100%; height: auto; border-radius: 8px; margin: 20px 0;">
             </ul>
         `
     },
     'support': {
-        title: 'Support Center',
+        title: 'Helper Section',
         content: `
-            <h3>Need Help?</h3>
-            <p>We're here to assist you:</p>
+            <h3>Tools</h3>
             <ul>
-                <li>Email Support: support@example.com</li>
-                <li>Phone Support: (555) 123-4567</li>
-                <li>Live Chat: Available 9 AM - 5 PM</li>
+                <li>Image Icon: You can download the timetable as an image.</li>
+                <li>Settings Icon: Settings related to the timetable. Most of the features are coming soon.</li>
             </ul>
 
-            <h3>Additional Resources</h3>
-            <p>Access more support options:</p>
+            <h3>Course Info section</h3>
+            <p>Information related to a course</p>
             <ul>
-                <li>Video Tutorials</li>
-                <li>Documentation</li>
-                <li>Community Forums</li>
+                <li>Hover on a course in the search bar and all the needed information concerning the course will be displayed.</li>
+            </ul>
+
+            <h3>Favorite section</h3>
+            <p>Store your soon to be courses</p>
+            <ul>
+                <li>Mentioned in the search section, pressing the star will add courses to this section. You can store as much as courses as you need to build your schedule.</li>
             </ul>
         `
     }
