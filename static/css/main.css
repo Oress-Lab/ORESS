@@ -69,22 +69,35 @@ body {
 .form-section {
     color: #60C6D8 !important;
     background-color: white;
-    padding: 20px; /* Reduced padding */
+    padding: 20px;
     border-radius: 8px;
     width: 100%;
     max-width: 400px;
-    margin: 10px 0; /* Reduced margin */
+    margin: 10px 0;
     text-align: center;
 }
 
-/* Reduce the margin for form elements */
+/* Form control styles */
 .form-control {
     background-color: white !important;
-    color: #fff !important;
+    color: #333 !important;  /* Changed to dark color for visibility */
     border: 1px solid #60C6D8 !important;
-    margin-bottom: 10px; /* Reduced margin between input fields */
+    margin-bottom: 10px;
     border-radius: 8px;
     padding: 10px;
+}
+
+/* Placeholder styles */
+.form-control::placeholder {
+    color: #999 !important;  /* Light grey for placeholder text */
+    opacity: 1;
+}
+
+/* Focus state */
+.form-control:focus {
+    outline: none;
+    border-color: #60C6D8 !important;
+    box-shadow: 0 0 0 2px rgba(96, 198, 216, 0.2) !important;
 }
 
 /* Card Styling */
@@ -106,13 +119,13 @@ body {
 }
 
 
-/* Error Message Styling */
+/* Error message styles */
 .error-message {
-    color: #ff4c4c !important;  /* Bright red to grab attention */
-    background-color: rgba(255, 76, 76, 0.1); /* Light red background for emphasis */
+    color: #ff4c4c !important;
+    background-color: rgba(255, 76, 76, 0.1);
     padding: 10px;
-    border: 1px solid #ff4c4c;  /* Red border for visibility */
-    border-radius: 8px; /* Rounded corners */
+    border: 1px solid #ff4c4c;
+    border-radius: 8px;
     font-size: 14px;
     margin-bottom: 15px;
     text-align: center;
@@ -210,6 +223,24 @@ body {
     text-decoration: none !important;
     border-bottom: 2px solid #60C6D8;
     padding-bottom: 3px;
+}
+
+.password-container {
+    position: relative;
+    width: 100%;
+}
+
+.password-container i {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+    color: #999;
+}
+
+.password-container i:hover {
+    color: #333;
 }
 
 /* Mobile responsiveness */
