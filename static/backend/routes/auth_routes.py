@@ -48,15 +48,15 @@ def index():
                     
                     # Send verification email
                     if send_verification_email(mail, email.lower(), token, url_for):
-                        flash('Account created! Please check your email to verify.', 'info')
+                        flash('Account created! Please check your email to verify.', 'signup_success')
                     else:
-                        flash('Account created but verification email failed to send. Please contact support.', 'warning')
+                        flash('Account created but verification email failed to send. Please contact support.', 'signup_error')
                 else:
-                    flash('Account already exists. Please log in.', 'error')
+                    flash('Account already exists. Please log in.', 'signup_error')
                     
             except Exception as e:
                 logging.error(f"Signup failed for {email}: {str(e)}")
-                flash('An error occurred during signup. Please try again.', 'error')
+                flash('An error occurred during signup. Please try again.', 'signup_error')
                 
         elif action == 'login':
             try:
@@ -64,17 +64,17 @@ def index():
                 user = get_database()['users'].find_one({'email': email.lower()})
                 
                 if not user:
-                    flash('Invalid email or password.', 'error')
+                    flash('Invalid email or password.', 'login_error')
                     return redirect(url_for('auth.index'))
                 
                 # Check if password exists and matches
                 if not user.get('password') or not check_password_hash(user['password'], password):
-                    flash('Invalid email or password.', 'error')
+                    flash('Invalid email or password.', 'login_error')
                     return redirect(url_for('auth.index'))
                 
                 # Check if email is verified
                 if not user.get('verified', False):
-                    flash('Please verify your email before logging in.', 'warning')
+                    flash('Please verify your email before logging in.', 'login_error')
                     return redirect(url_for('auth.index'))
                 
                 # Create session
@@ -82,7 +82,7 @@ def index():
                 session['user_id'] = str(user['_id'])
                 session['email'] = user['email']
                 
-                flash('Successfully logged in!', 'success')
+                flash('Successfully logged in!', 'login_success')
                 return redirect(url_for('timetable.show_timetable'))
                 
             except Exception as e:
