@@ -10,7 +10,7 @@ def get_db_connection(campus):
     base_dir = os.path.abspath(os.path.dirname(__file__))
     
     if campus == 'main':
-        db_name = 'sp25.db'
+        db_name = 'main_courses.db'
     elif campus == 'north_lebanon':
         db_name = 'north_courses.db'
     elif campus == 'shouf':
