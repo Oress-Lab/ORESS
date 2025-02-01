@@ -32,11 +32,22 @@
                 <div class="py-2 border-b border-gray-700">
                     <label class="block text-white text-sm mb-2">Select Campus:</label>
                     <form id="mobile-campus-form" method="POST" action="/change_campus">
-                        <select name="campus" onchange="this.form.submit()" 
-                                class="w-full bg-white text-gray-800 text-sm rounded-md px-2 py-1 border border-gray-300">
+                        <select name="campus" onchange="this.form.submit()" class="w-full bg-white text-gray-800 text-sm rounded-md px-2 py-1 border border-gray-300">
                             <option value="main" {% if selected_campus == 'main' %}selected{% endif %}>Main Campus</option>
                             <option value="north_lebanon" {% if selected_campus == 'north_lebanon' %}selected{% endif %}>North Lebanon Campus</option>
                             <option value="shouf" {% if selected_campus == 'shouf' %}selected{% endif %}>Shouf Campus</option>
+                        </select>
+                    </form>
+                </div>
+
+                <!-- Semester/Year Selector in Mobile Menu -->
+                <div class="py-2 border-b border-gray-700">
+                    <label class="block text-white text-sm mb-2">Select Semester/Year:</label>
+                    <form id="mobile-semester-form" method="POST" action="/change_semester">
+                        <select name="semester_year" onchange="this.form.submit()" class="w-full bg-white text-gray-800 text-sm rounded-md px-2 py-1 border border-gray-300">
+                            <option value="spring_2023" {% if selected_semester_year == 'spring_2023' %}selected{% endif %}>Spring 2023</option>
+                            <option value="summer_2023" {% if selected_semester_year == 'summer_2023' %}selected{% endif %}>Summer 2023</option>
+                            <option value="fall_2023" {% if selected_semester_year == 'fall_2023' %}selected{% endif %}>Fall 2023</option>
                         </select>
                     </form>
                 </div>
@@ -72,16 +83,29 @@
             </div>
             
             <div class="flex items-center space-x-4 ml-auto">
-                <!-- Change Campus Dropdown -->
-                <span class="text-white text-sm font-lato">Your Campus:</span>
+                <!-- Campus Selector -->
                 <form id="campus-form" method="POST" action="/change_campus">
+                    <label class="text-white text-sm font-lato mr-2">Campus:</label>
                     <select name="campus" onchange="this.form.submit()" class="bg-white text-gray-800 text-sm rounded-md px-2 py-1 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-[#60C6D8]">
                         <option value="main" {% if selected_campus == 'main' %}selected{% endif %}>Main Campus</option>
                         <option value="north_lebanon" {% if selected_campus == 'north_lebanon' %}selected{% endif %}>North Lebanon Campus</option>
                         <option value="shouf" {% if selected_campus == 'shouf' %}selected{% endif %}>Shouf Campus</option>
                     </select>
                 </form>
-        
+            
+                <!-- Semester/Year Selector -->
+                <!--! If not db_name available throw an error page (new 404 page of courses not found) !-->
+                <form id="semester-form" method="POST" action="/change_semester">
+                    <label class="text-white text-sm font-lato mr-2">Semester/Year:</label>
+                    <select name="semester_year" onchange="this.form.submit()" class="bg-white text-gray-800 text-sm rounded-md px-2 py-1 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-[#60C6D8]">
+                        {% for semester, year in available_semesters_years %}
+                        <option value="{{ semester.lower() }}_{{ year }}" {% if selected_semester_year == (semester.lower() ~ '_' ~ year) %}selected{% endif %}>
+                            {{ semester }} {{ year }}
+                        </option>
+                        {% endfor %}
+                    </select>
+                </form>
+            
                 <!-- Logout Button -->
                 <a href="#" class="nav-link">Logout</a>
             </div>
