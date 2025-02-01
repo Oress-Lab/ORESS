@@ -2,108 +2,232 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">    
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/now-ui-kit.css') }}">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css?family=Poppins:300,400,600,700,800,900&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css?family=Montserrat:400,600,700,800,900&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css?family=Lato:300,400,600,700,800,900&display=swap" rel="stylesheet">
     <title>ORESS</title>
+    <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <title>ORESS</title>
+    <style>
+        .form-container {
+            position: relative;
+            overflow: hidden;
+        }
+        .form-section {
+            transition: transform 0.3s ease-in-out;
+        }
+        .form-section.login {
+            transform: translateX(0);
+        }
+        .form-section.signup {
+            transform: translateX(100%);
+        }
+        .form-container.active .form-section.login {
+            transform: translateX(-100%);
+        }
+        .form-container.active .form-section.signup {
+            transform: translateX(0);
+        }
+    </style>
 </head>
-<body>
-    <nav class="navbar navbar-expand-lg bg-transparent">
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-            <img src="../static/assets/menuIcon.svg" width="20px" height="20px" style="max-width: none !important;">
-        </button>
-        <img src="../static/assets/LOGO.svg" width="80" height="80" class="ml-3">
-        <div class="collapse navbar-collapse" id="navbarSupportedContent" style="margin-left: 20px !important">
-            <ul class="navbar-nav mr-auto">
-                <li class="nav-item">
-                    <a class="nav-link" href="{{ url_for('static_pages.about') }}">About</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="{{ url_for('contact.show_contact') }}">Contact</a>
-                </li>
-                <!--
-                <li class="nav-item">
-                    <a class="nav-link" href="{{ url_for('timetable.show_timetable') }}">TimeTable</a>
-                </li>
-                -->
-            </ul>
+<body class="bg-gray-100">
+    <!-- Floating Navbar -->
+    <nav class="fixed w-full bg-blue-600 text-white shadow-md z-50">
+        <div class="max-w-7xl mx-auto">
+            <div class="flex items-center justify-between px-6 py-4">
+                <div class="flex items-center">
+                    <img src="../static/assets/uni.svg" alt="Logo" class="h-12 w-12">
+                    <div class="hidden md:flex space-x-8 ml-8">
+                        <a href="{{ url_for('static_pages.about') }}" class="text-white hover:text-blue-100 font-medium transition-colors">About</a>
+                        <a href="{{ url_for('contact.show_contact') }}" class="text-white hover:text-blue-100 font-medium transition-colors">Contact</a>
+                    </div>
+                </div>
+                <button class="md:hidden text-white">
+                    <i class="fas fa-bars text-xl"></i>
+                </button>
+            </div>
         </div>
     </nav>
 
-    <!-- Centered Content Section -->
-    <div class="centered-container">
-        <div class="heading">
-            <h1 class="display-5 title">It's time for a better scheduling.</h1>
-            <p class="subtitle">Say goodbye to complicated scheduling and third-party apps—everything you need is right in your browser.<br>Seamlessly organize your courses, explore all options, and avoid overlaps without any downloads.<br>Available for <u>ALL NDU CAMPUSES</u>, this tool makes scheduling simple and efficient.</p>
-        </div>
-        
-        <div class="card">
-            <!-- Login Form Section -->
-            <div class="form-section">
-                <h2>Login</h2>
-                {% with messages = get_flashed_messages(with_categories=true, category_filter=['login_error', 'login_success']) %}
-                    {% if messages %}
-                        {% for category, message in messages %}
-                            <li class="{{ category }}">{{ message }}</li>
-                        {% endfor %}
-                    {% endif %}
-                {% endwith %}
-                <form method="POST">
-                    <input type="email" name="email" class="form-control" placeholder="Email" required>
-                    <div class="password-container">
-                        <input type="password" name="password" class="form-control" placeholder="Password" id="loginPassword" required>
-                        <i class="fas fa-eye" id="toggleLoginPassword"></i>
+    <div class="pt-24 min-h-screen">
+        <div class="flex items-center justify-center px-4 py-12">
+            <div class="w-full max-w-md">
+                <div class="text-center mb-8">
+                    <h1 class="text-3xl font-bold text-gray-900 mb-2">It's time for a better scheduling.</h1>
+                    <p class="text-gray-600">
+                        Say goodbye to complicated scheduling - everything you need is right in your browser.
+                        Available for <u>ALL NDU CAMPUSES</u>.
+                    </p>
+                </div>
+    
+                <div class="bg-white rounded-lg shadow-xl p-8">
+                    <div class="flex space-x-4 mb-6 border-b">
+                        <button onclick="switchForm('login')" 
+                                class="pb-2 px-4 font-medium text-gray-500 border-b-2 border-transparent focus:outline-none transition-colors"
+                                id="loginTab">
+                            Login
+                        </button>
+                        <button onclick="switchForm('signup')" 
+                                class="pb-2 px-4 font-medium text-gray-500 border-b-2 border-transparent focus:outline-none transition-colors"
+                                id="signupTab">
+                            Sign Up
+                        </button>
                     </div>
-                    <input type="hidden" name="action" value="login">
-                    <button type="submit" class="btn btn-primary">Login</button>
-                </form>
-                <a href="{{ url_for('auth.forgot_password') }}" class="forgot-password">Forgot Password?</a>
-            </div>
-        </div>
-        <div class="card">
-            <!-- Sign Up Form Section -->
-            <div class="form-section">
-                <h2>Sign Up</h2>
-                {% with messages = get_flashed_messages(with_categories=true, category_filter=['signup_error', 'signup_success']) %}
-                    {% if messages %}
-                        {% for category, message in messages %}
-                            <li class="{{ category }}">{{ message }}</li>
-                        {% endfor %}
-                    {% endif %}
-                {% endwith %}
-                <form method="POST">
-                    <input type="email" name="email" class="form-control" placeholder="Email" required>
-                    <input type="email" name="confirm_email" class="form-control" placeholder="Retype Email" required>
-                    <div class="password-container">
-                        <input type="password" name="password" class="form-control" placeholder="Password" id="signupPassword" required>
-                        <i class="fas fa-eye" id="toggleSignupPassword"></i>
+    
+                    <div class="form-container" id="formContainer">
+                        <!-- Login Form -->
+                        <div class="form-section login">
+                            <h2 class="text-2xl font-bold mb-6">Welcome Back!</h2>
+                            <p class="text-gray-600 mb-6">Sign in to access your account</p>
+                            {% with messages = get_flashed_messages(with_categories=true, category_filter=['login_error', 'login_success']) %}
+                                {% if messages %}
+                                    <div class="mb-4">
+                                        {% for category, message in messages %}
+                                            <div class="{{ 'text-red-600' if category == 'login_error' else 'text-green-600' }} text-sm">
+                                                {{ message }}
+                                            </div>
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            {% endwith %}
+                            <form method="POST">
+                                <div class="space-y-4">
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 mb-1">Email</label>
+                                        <input type="email" name="email" placeholder="Enter your email" 
+                                               class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 mb-1">Password</label>
+                                        <div class="relative">
+                                            <input type="password" name="password" id="loginPassword" placeholder="Enter your password"
+                                                   class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                            <i class="absolute right-3 top-3 text-gray-400 cursor-pointer fas fa-eye" 
+                                               onclick="togglePassword('loginPassword', this)"></i>
+                                        </div>
+                                    </div>
+                                    <input type="hidden" name="action" value="login">
+                                    <button type="submit" 
+                                            class="w-full bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition-colors">
+                                        Login
+                                    </button>
+                                </div>
+                            </form>
+                            <div class="mt-4 text-center">
+                                <a href="{{ url_for('auth.forgot_password') }}" class="text-blue-600 text-sm hover:underline">
+                                    Forgot Password?
+                                </a>
+                            </div>
+                        </div>
+    
+                        <!-- Signup Form -->
+                        <div class="form-section signup absolute top-0 left-0 w-full">
+                            <h2 class="text-2xl font-bold mb-6">Create Account</h2>
+                            <p class="text-gray-600 mb-6">Sign up to get started</p>
+                            {% with messages = get_flashed_messages(with_categories=true, category_filter=['signup_error', 'signup_success']) %}
+                                {% if messages %}
+                                    <div class="mb-4">
+                                        {% for category, message in messages %}
+                                            <div class="{{ 'text-red-600' if category == 'signup_error' else 'text-green-600' }} text-sm">
+                                                {{ message }}
+                                            </div>
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            {% endwith %}
+                            <form method="POST">
+                                <div class="space-y-4">
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 mb-1">Email</label>
+                                        <input type="email" name="email" placeholder="Enter your email" 
+                                               class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 mb-1">Confirm Email</label>
+                                        <input type="email" name="confirm_email" placeholder="Confirm your email" 
+                                               class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 mb-1">Password</label>
+                                        <div class="relative">
+                                            <input type="password" name="password" id="signupPassword" placeholder="Enter your password" 
+                                                   class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                            <i class="absolute right-3 top-3 text-gray-400 cursor-pointer fas fa-eye" 
+                                               onclick="togglePassword('signupPassword', this)"></i>
+                                        </div>
+                                    </div>
+                                    <input type="hidden" name="action" value="signup">
+                                    <button type="submit" 
+                                            class="w-full bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition-colors">
+                                        Sign Up
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
                     </div>
-                    <input type="hidden" name="action" value="signup">
-                    <button type="submit" class="btn btn-secondary">Sign Up</button>
-                </form>
+                </div>
             </div>
         </div>
     </div>
 
     <!-- Footer -->
-    <div class="page_end">
-        <div class="footer">
-            <div class="bot-footer">
-                &copy; <span id="copyright-year"></span> ORESS. All rights reserved.
-            </div><br/>
-            <div class="nouridio">A project by <a href="#">Kristen W. Kamouh</a></div>
+    <footer class="bg-white border-t border-gray-200">
+        <div class="max-w-7xl mx-auto py-6 px-6">
+            <div class="flex flex-col md:flex-row justify-between items-center">
+                <div class="text-blue-600 mb-4 md:mb-0">
+                    <img src="../static/assets/uni.svg" alt="Footer Logo" class="h-10">
+                </div>
+                <div class="text-center md:text-right text-gray-600">
+                    <div>&copy; <span id="copyright-year"></span> ORESS. All rights reserved.</div>
+                    <div class="mt-2">A project by <a href="#" class="text-blue-600 hover:text-blue-700 hover:underline">Kristen W. Kamouh</a></div>
+                </div>
+            </div>
         </div>
-    </div>
+    </footer>
 
-    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6HJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
-    <script src="{{ url_for('static', filename='js/now-ui-kit.min.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/extra.js') }}"></script>
+    <script>
+        // Update copyright year
+        document.getElementById('copyright-year').textContent = new Date().getFullYear();
+
+        function switchForm(formType) {
+            const formContainer = document.getElementById('formContainer');
+            const loginTab = document.getElementById('loginTab');
+            const signupTab = document.getElementById('signupTab');
+
+            if (formType === 'login') {
+                formContainer.classList.remove('active');
+                loginTab.classList.add('border-blue-600', 'text-blue-600');
+                signupTab.classList.remove('border-blue-600', 'text-blue-600');
+            } else {
+                formContainer.classList.add('active');
+                signupTab.classList.add('border-blue-600', 'text-blue-600');
+                loginTab.classList.remove('border-blue-600', 'text-blue-600');
+            }
+        }
+
+        function togglePassword(fieldId, icon) {
+            const passwordField = document.getElementById(fieldId);
+            if (passwordField.type === 'password') {
+                passwordField.type = 'text';
+                icon.classList.remove('fa-eye');
+                icon.classList.add('fa-eye-slash');
+            } else {
+                passwordField.type = 'password';
+                icon.classList.add('fa-eye');
+                icon.classList.remove('fa-eye-slash');
+            }
+        }
+
+        // Initialize with login form visible
+        document.addEventListener('DOMContentLoaded', () => {
+            switchForm('login');
+        });
+    </script>
 </body>
 </html>
