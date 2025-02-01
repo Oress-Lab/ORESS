@@ -3,6 +3,21 @@
 
 """
 
+from datetime import datetime
+
+def get_current_semester():
+    now = datetime.now()
+    month = now.month
+    year = now.year
+    
+    if 1 <= month < 6:    # January-May: Spring
+        return 'Spring', year
+    elif 6 <= month < 9:  # June-August: Summer
+        return 'Summer', year
+    else:                 # September-December: Fall
+        return 'Fall', year
+
+
 def parse_days(time_str):
     days_map = {
         'M': 'Mon',
