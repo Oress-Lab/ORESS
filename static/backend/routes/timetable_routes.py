@@ -3,10 +3,12 @@
 
 """
 
+import os
+import re
 
 from flask import Blueprint, jsonify, redirect, render_template, request, session, url_for
 from ..utils.db import get_db_connection
-from ..utils.time_parser import parse_time_field
+from ..utils.time_parser import parse_time_field, get_current_semester
 
 timetable = Blueprint('timetable', __name__)
 
@@ -16,16 +18,45 @@ def change_campus():
     session['campus'] = selected_campus
     return redirect(url_for('timetable.show_timetable'))
 
+@timetable.route('/change_semester', methods=['POST'])
+def change_semester():
+    selected_semester_year = request.form.get('semester_year')
+    session['semester_year'] = selected_semester_year
+    return redirect(url_for('timetable.show_timetable'))
+
 @timetable.route('/timetable')
 def show_timetable():
     campus = session.get('campus', 'main')
-    conn = get_db_connection(campus)
-    courses = conn.execute("SELECT * FROM courses").fetchall()
-    semester_year = conn.execute("SELECT semester, year FROM courses LIMIT 1").fetchone()
-    semester, year = semester_year if semester_year else ("N/A", "N/A")
+    semester_year = session.get('semester_year', None)
 
-    conn.close()
+    # Get all available database files
+    db_dir = os.path.join(os.path.dirname(__file__), '..', '..', 'db')
+    db_files = [f for f in os.listdir(db_dir) if f.endswith('.db')]
 
+    # Extract campus, semester, and year from filenames
+    available_semesters_years = set()
+    for db_file in db_files:
+        match = re.match(r'^(main|north|shouf)_(spring|summer|fall)_(\d{4})\.db$', db_file.lower())
+        if match:
+            campus_name, semester, year = match.groups()
+            available_semesters_years.add((semester.capitalize(), int(year)))
+
+    # Sort semesters/years in descending order
+    available_semesters_years = sorted(available_semesters_years, key=lambda x: (x[1], ['Spring', 'Summer', 'Fall'].index(x[0])), reverse=True)
+
+    # If no semester/year is selected, use the latest one
+    if not semester_year and available_semesters_years:
+        semester, year = available_semesters_years[0]
+        semester_year = f"{semester.lower()}_{year}"
+        session['semester_year'] = semester_year
+
+    # Fetch courses for the selected semester and year
+    conn = get_db_connection(campus, *semester_year.split('_')) if semester_year else None
+    courses = conn.execute("SELECT * FROM courses").fetchall() if conn else []
+    if conn:
+        conn.close()
+
+    # Parse course times and prepare data for the template
     course_positions = []
     for course in courses:
         days, (start_time, end_time) = parse_time_field(course['time'])
@@ -41,11 +72,13 @@ def show_timetable():
                 })
 
     return render_template(
-        'timetable.html', 
-        course_positions=course_positions, 
-        selected_campus=campus, 
-        semester=semester, 
-        year=year
+        'timetable.html',
+        course_positions=course_positions,
+        selected_campus=campus,
+        selected_semester_year=semester_year,
+        available_semesters_years=available_semesters_years,
+        semester=semester_year.split('_')[0].capitalize() if semester_year else "N/A",
+        year=semester_year.split('_')[1] if semester_year else "N/A"
     )
 
 @timetable.route('/search', methods=['POST'])
@@ -115,8 +148,9 @@ def search():
     if where_clauses:
         sql_query += " WHERE " + " AND ".join(where_clauses)
 
+    semester, year = get_current_semester()
     # Execute query
-    conn = get_db_connection(campus)
+    conn = get_db_connection(campus, semester, year)
     courses = conn.execute(sql_query, params).fetchall()
     conn.close()
 
