@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <title>Help - ORESS</title>
+    <style>
+        .card-hover {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .card-hover:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+        .nav-hidden {
+            transform: translateY(-100%);
+        }
+        .nav-visible {
+            transform: translateY(0);
+        }
+        .faq-answer {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out;
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-blue-50 to-indigo-50">
+    <!-- Floating Navbar -->
+    <nav class="fixed w-full bg-blue-600 text-white shadow-md z-50">
+        <div class="max-w-7xl mx-auto">
+            <div class="flex items-center justify-between px-6 py-4">
+                <div class="flex items-center">
+                    <img src="../static/assets/LOGO.svg" alt="Logo" class="h-12 w-12">
+                    <div class="hidden md:flex space-x-8 ml-8">
+                        <a href="{{ url_for('auth.index') }}" class="text-white hover:text-blue-100 font-medium transition-colors">Home</a>
+                        <a href="{{ url_for('static_pages.about') }}" class="text-white hover:text-blue-100 font-medium transition-colors">About</a>
+                        <a href="{{ url_for('contact.show_contact') }}" class="text-white hover:text-blue-100 font-medium transition-colors">Contact</a>
+                        <a href="{{ url_for('static_pages.help') }}" class="text-white hover:text-blue-100 font-medium transition-colors">Help</a>
+                    </div>
+                </div>
+                <button id="mobile-menu-button" class="md:hidden text-white focus:outline-none">
+                    <i class="fas fa-bars text-xl"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Mobile Menu -->
+        <div id="mobile-menu" class="mobile-menu md:hidden bg-blue-600 overflow-hidden transition-all duration-300 max-h-0">
+            <div class="px-6 py-2 space-y-2">
+                <a href="{{ url_for('auth.index') }}" class="block py-2 text-white hover:bg-blue-700 rounded-md px-4">Home</a>
+                <a href="{{ url_for('static_pages.about') }}" class="block py-2 text-white hover:bg-blue-700 rounded-md px-4">About</a>
+                <a href="{{ url_for('contact.show_contact') }}" class="block py-2 text-white hover:bg-blue-700 rounded-md px-4">Contact</a>
+                <a href="{{ url_for('static_pages.help') }}" class="block py-2 text-white hover:bg-blue-700 rounded-md px-4">Help</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Page Content -->
+    <div class="page-content pt-24 min-h-screen transition-transform duration-300">
+        <!-- Feature Request Section -->
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+            <div class="bg-white rounded-lg shadow-md p-6 mb-8">
+                <p class="text-center text-gray-600">
+                    Have a suggestion or found a bug? 
+                    <a href="https://forms.google.com/your-form-link" class="text-blue-600 hover:text-blue-700 font-medium">
+                        Let us know!
+                    </a>
+                </p>
+            </div>
+
+            <!-- Service Cards -->
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+                <h2 class="text-2xl font-bold text-center mb-8">Quick Help Navigation</h2>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <!-- Search Section Card -->
+                    <div class="bg-white rounded-lg shadow-md p-6 card-hover">
+                        <img src="{{ url_for('static', filename='assets/help/search_section.svg') }}" 
+                             alt="Search Section" 
+                             class="h-16 w-16 mx-auto mb-4">
+                        <h3 class="text-xl font-semibold text-center mb-2">Search Section</h3>
+                        <p class="text-gray-600 text-center">Know your search, know how to navigate!</p>
+                    </div>
+
+                    <!-- Timetable Section Card -->
+                    <div class="bg-white rounded-lg shadow-md p-6 card-hover">
+                        <img src="{{ url_for('static', filename='assets/help/timetable_section.svg') }}" 
+                             alt="Timetable Section" 
+                             class="h-16 w-16 mx-auto mb-4">
+                        <h3 class="text-xl font-semibold text-center mb-2">Timetable Section</h3>
+                        <p class="text-gray-600 text-center">Elements position on the grid</p>
+                    </div>
+
+                    <!-- Tools Section Card -->
+                    <div class="bg-white rounded-lg shadow-md p-6 card-hover">
+                        <img src="{{ url_for('static', filename='assets/help/fav-info_section.svg') }}" 
+                             alt="Tools Section" 
+                             class="h-16 w-16 mx-auto mb-4">
+                        <h3 class="text-xl font-semibold text-center mb-2">Tools</h3>
+                        <p class="text-gray-600 text-center">This section helps you throughout your session</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- FAQ Section -->
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+                <h2 class="text-2xl font-bold text-center mb-8">Frequently Asked Questions</h2>
+                <div class="space-y-4">
+                    <!-- FAQ Items -->
+                    {% set faqs = [
+                        ("Why downloading the schedule as PDF is not yet available?", 
+                         "One of the most requested features is the ability to download the schedule as a PDF. We are working on it and it will be available soon."),
+                        ("What does the 'color palette' inside the settings mean?", 
+                         "Later on we will allow the user to choose their own colors for the courses, but for now they are built in and standard for all."),
+                        ("Is my password safe?", 
+                         "Of course. Your password is stored securely using industry-standard encryption methods."),
+                        ("Can I switch between campuses?", 
+                         "Yes you can, but keep in mind to switch back to the right campus before you start adding courses."),
+                        ("Will my progress be saved once I leave the site?", 
+                         "Yes your progress will be saved, like you never left.")
+                    ] %}
+                    
+                    {% for question, answer in faqs %}
+                    <div class="bg-white rounded-lg shadow-md">
+                        <button class="w-full text-left p-4 flex justify-between items-center faq-question">
+                            <span class="font-medium text-gray-700">{{ question }}</span>
+                            <span class="text-blue-600 text-xl faq-toggle">+</span>
+                        </button>
+                        <div class="faq-answer px-4 pb-4">
+                            <p class="text-gray-600">{{ answer }}</p>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-white border-t border-gray-200 mt-24">
+        <div class="max-w-7xl mx-auto py-6 px-6">
+            <div class="flex flex-col md:flex-row justify-between items-center">
+                <div class="text-blue-600 mb-4 md:mb-0">
+                    <img src="../static/assets/LOGO.svg" alt="Footer Logo" class="h-10">
+                </div>
+                <div class="text-center md:text-right text-gray-600">
+                    <div>&copy; <span id="copyright-year"></span> ORESS. All rights reserved.</div>
+                    <div class="mt-2">A project by <a href="#" class="text-blue-600 hover:text-blue-700 hover:underline">Kristen W. Kamouh</a></div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Mobile Menu Functionality
+        const mobileMenuButton = document.getElementById('mobile-menu-button');
+        const mobileMenu = document.getElementById('mobile-menu');
+        const pageContent = document.querySelector('.page-content');
+
+        mobileMenuButton.addEventListener('click', () => {
+            mobileMenu.classList.toggle('max-h-0');
+            mobileMenu.classList.toggle('max-h-64');
+            document.body.classList.toggle('menu-open');
+        });
+
+        // FAQ Toggle Functionality
+        document.querySelectorAll('.faq-question').forEach(button => {
+            button.addEventListener('click', () => {
+                const answer = button.nextElementSibling;
+                const toggle = button.querySelector('.faq-toggle');
+                
+                if (answer.style.maxHeight) {
+                    answer.style.maxHeight = null;
+                    toggle.textContent = '+';
+                } else {
+                    answer.style.maxHeight = answer.scrollHeight + "px";
+                    toggle.textContent = '-';
+                }
+            });
+        });
+
+        // Update copyright year
+        document.getElementById('copyright-year').textContent = new Date().getFullYear();
+    </script>
+</body>
+</html>
