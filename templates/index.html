@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <title>ORESS</title>
+    <style>
+        /* Form Container and Sections */
+        .form-container {
+            position: relative;
+            overflow: hidden;
+            min-height: 450px; /* Increased from 380px to 450px */
+        }
+        .form-section {
+            transition: transform 0.3s ease-in-out;
+            padding: 1rem 0; /* Increased padding from 0.5rem to 1rem */
+        }
+        .form-section.login {
+            transform: translateX(0);
+        }
+        .form-section.signup {
+            transform: translateX(100%);
+        }
+        .form-container.active .form-section.login {
+            transform: translateX(-100%);
+        }
+        .form-container.active .form-section.signup {
+            transform: translateX(0);
+        }
+
+        /* Mobile Menu Animation */
+        .mobile-menu {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out, opacity 0.2s ease-out;
+            opacity: 0;
+        }
+
+        .mobile-menu.open {
+            max-height: 200px;
+            opacity: 1;
+        }
+
+        .page-content {
+            transition: transform 0.3s ease-out;
+        }
+
+        .menu-open .page-content {
+            transform: translateY(160px);
+        }
+    </style>
+</head>
+<body class="bg-gray-100">
+    <!-- Floating Navbar -->
+    <nav class="fixed w-full bg-blue-600 text-white shadow-md z-50">
+        <div class="max-w-7xl mx-auto">
+            <div class="flex items-center justify-between px-6 py-4">
+                <div class="flex items-center">
+                    <img src="../static/assets/LOGO.svg" alt="Logo" class="h-12 w-12">
+                    <div class="hidden md:flex space-x-8 ml-8">
+                        <a href="{{ url_for('static_pages.about') }}" class="text-white hover:text-blue-100 font-medium transition-colors">About</a>
+                        <a href="{{ url_for('contact.show_contact') }}" class="text-white hover:text-blue-100 font-medium transition-colors">Contact</a>
+                    </div>
+                </div>
+                <button id="mobile-menu-button" class="md:hidden text-white focus:outline-none">
+                    <i class="fas fa-bars text-xl"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Mobile Menu -->
+        <div id="mobile-menu" class="mobile-menu md:hidden bg-blue-600">
+            <div class="px-6 py-2 space-y-2">
+                <a href="{{ url_for('static_pages.about') }}" class="block py-2 text-white hover:bg-blue-700 rounded-md px-4">About</a>
+                <a href="{{ url_for('contact.show_contact') }}" class="block py-2 text-white hover:bg-blue-700 rounded-md px-4">Contact</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Page Content -->
+    <div class="page-content pt-24 min-h-screen transition-transform duration-300">
+        <div class="container mx-auto px-4 py-12 flex flex-col md:flex-row items-center justify-between gap-8 max-w-6xl">
+            <!-- Left side - Text content -->
+            <div class="w-full md:w-1/2 space-y-6">
+                <h1 class="text-4xl md:text-5xl font-bold text-gray-900 leading-tight">It's time for a better scheduling.</h1>
+                <p class="text-xl text-gray-600">
+                    Say goodbye to complicated scheduling - everything you need is right in your browser.
+                    Available for <u>ALL NDU CAMPUSES</u>.
+                </p>
+            </div>
+
+            <!-- Right side - Card -->
+            <div class="w-full md:w-1/2 max-w-lg"> <!-- Changed from max-w-md to max-w-lg -->
+                <div class="bg-white rounded-lg shadow-xl p-8"> <!-- Increased padding from p-6 to p-8 -->
+                    <div class="flex space-x-4 mb-6 border-b">
+                        <button onclick="switchForm('login')" 
+                                class="pb-2 px-4 font-medium text-gray-500 border-b-2 border-transparent focus:outline-none transition-colors"
+                                id="loginTab">
+                            Login
+                        </button>
+                        <button onclick="switchForm('signup')" 
+                                class="pb-2 px-4 font-medium text-gray-500 border-b-2 border-transparent focus:outline-none transition-colors"
+                                id="signupTab">
+                            Sign Up
+                        </button>
+                    </div>
+
+                    <div class="form-container" id="formContainer">
+                        <!-- Login Form -->
+                        <div class="form-section login flex flex-col justify-center"> <!-- Added flex and justify-center -->
+                            <div class="py-6"> <!-- Added padding wrapper -->
+                                <h2 class="text-2xl font-bold mb-4 text-center">Welcome Back!</h2>
+                                <p class="text-gray-600 mb-6 text-center">Sign in to access your account</p>
+                                {% with messages = get_flashed_messages(with_categories=true, category_filter=['login_error']) %}
+                                    {% if messages %}
+                                        <div class="mb-4">
+                                            {% for category, message in messages %}
+                                                <div class="text-red-600 text-sm text-center">
+                                                    {{ message }}
+                                                </div>
+                                            {% endfor %}
+                                        </div>
+                                    {% endif %}
+                                {% endwith %}
+                                <form method="POST" class="space-y-4"> <!-- Increased space-y-3 to space-y-4 -->
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 mb-1">Email</label>
+                                        <input type="email" name="email" placeholder="Enter your email" 
+                                               class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 mb-1">Password</label>
+                                        <div class="relative">
+                                            <input type="password" name="password" id="loginPassword" placeholder="Enter your password"
+                                                   class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                            <i class="absolute right-3 top-3 text-gray-400 cursor-pointer fas fa-eye" 
+                                               onclick="togglePassword('loginPassword', this)"></i>
+                                        </div>
+                                    </div>
+                                    <input type="hidden" name="action" value="login">
+                                    <button type="submit" 
+                                            class="w-full bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition-colors">
+                                        Login
+                                    </button>
+                                </form>
+                                <div class="mt-4 text-center">
+                                    <a href="{{ url_for('auth.forgot_password') }}" class="text-blue-600 text-sm hover:underline">
+                                        Forgot Password?
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Signup Form -->
+                        <div class="form-section signup absolute top-0 left-0 w-full">
+                            <h2 class="text-2xl font-bold mb-6">Create Account to get started</h2>
+                            {% with messages = get_flashed_messages(with_categories=true) %}
+                                {% if messages %}
+                                    {% for category, message in messages %}
+                                        <div class="text-sm mb-4 {% if category == 'error' %}text-red-600{% else %}text-green-600{% endif %}">
+                                            {{ message }}
+                                        </div>
+                                    {% endfor %}
+                                {% endif %}
+                            {% endwith %}
+                            <form method="POST">
+                                <div class="space-y-4">
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 mb-1">Email</label>
+                                        <input type="email" name="email" placeholder="Enter your email" 
+                                               class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 mb-1">Password</label>
+                                        <div class="relative">
+                                            <input type="password" name="password" id="signupPassword" placeholder="Enter your password" 
+                                                   class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                                   onkeyup="checkPasswordStrength(this.value)">
+                                            <i class="absolute right-3 top-3 text-gray-400 cursor-pointer fas fa-eye" 
+                                               onclick="togglePassword('signupPassword', this)"></i>
+                                        </div>
+                                        <div id="password-strength" class="mt-1">
+                                            <div class="h-1 w-full bg-gray-200 rounded-full">
+                                                <div id="strength-bar" class="h-1 rounded-full transition-all duration-300"></div>
+                                            </div>
+                                            <p id="strength-text" class="text-xs mt-1 text-gray-600"></p>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 mb-1">Confirm Password</label>
+                                        <div class="relative">
+                                            <input type="password" name="confirm_password" id="confirmPassword" placeholder="Confirm your password" 
+                                                   class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                                   onkeyup="checkPasswordMatch()">
+                                            <i class="absolute right-3 top-3 text-gray-400 cursor-pointer fas fa-eye" 
+                                               onclick="togglePassword('confirmPassword', this)"></i>
+                                        </div>
+                                        <p id="password-match" class="text-xs mt-1 hidden"></p>
+                                    </div>
+                                    <input type="hidden" name="action" value="signup">
+                                    <button type="submit" 
+                                            class="w-full bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition-colors">
+                                        Sign Up
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-white border-t border-gray-200">
+        <div class="max-w-7xl mx-auto py-6 px-6">
+            <div class="flex flex-col md:flex-row justify-between items-center">
+                <div class="text-blue-600 mb-4 md:mb-0">
+                    <img src="../static/assets/LOGO.svg" alt="Footer Logo" class="h-10">
+                </div>
+                <div class="text-center md:text-right text-gray-600">
+                    <div>&copy; <span id="copyright-year"></span> ORESS. All rights reserved.</div>
+                    <div class="mt-2">A project by <a href="#" class="text-blue-600 hover:text-blue-700 hover:underline">Kristen W. Kamouh</a></div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Mobile Menu Functionality
+        const mobileMenuButton = document.getElementById('mobile-menu-button');
+        const mobileMenu = document.getElementById('mobile-menu');
+        const pageContent = document.querySelector('.page-content');
+
+        mobileMenuButton.addEventListener('click', () => {
+            mobileMenu.classList.toggle('open');
+            document.body.classList.toggle('menu-open');
+        });
+
+        // Close menu when clicking outside
+        document.addEventListener('click', (e) => {
+            if (!mobileMenu.contains(e.target) && !mobileMenuButton.contains(e.target)) {
+                mobileMenu.classList.remove('open');
+                document.body.classList.remove('menu-open');
+            }
+        });
+
+        // Update copyright year
+        document.getElementById('copyright-year').textContent = new Date().getFullYear();
+
+        function switchForm(formType) {
+            const formContainer = document.getElementById('formContainer');
+            const loginTab = document.getElementById('loginTab');
+            const signupTab = document.getElementById('signupTab');
+
+            if (formType === 'login') {
+                formContainer.classList.remove('active');
+                loginTab.classList.add('border-blue-600', 'text-blue-600');
+                signupTab.classList.remove('border-blue-600', 'text-blue-600');
+            } else {
+                formContainer.classList.add('active');
+                signupTab.classList.add('border-blue-600', 'text-blue-600');
+                loginTab.classList.remove('border-blue-600', 'text-blue-600');
+            }
+        }
+
+        // Initialize with correct form visible based on server-side state or default to login
+        document.addEventListener('DOMContentLoaded', () => {
+            const activeCard = '{{ active_card if active_card else "login" }}';
+            switchForm(activeCard);
+        });
+
+        function togglePassword(fieldId, icon) {
+            const passwordField = document.getElementById(fieldId);
+            if (passwordField.type === 'password') {
+                passwordField.type = 'text';
+                icon.classList.remove('fa-eye');
+                icon.classList.add('fa-eye-slash');
+            } else {
+                passwordField.type = 'password';
+                icon.classList.add('fa-eye');
+                icon.classList.remove('fa-eye-slash');
+            }
+        }
+
+        function checkPasswordStrength(password) {
+            const strengthBar = document.getElementById('strength-bar');
+            const strengthText = document.getElementById('strength-text');
+            
+            // Initialize score
+            let score = 0;
+            
+            // Length check
+            if (password.length >= 8) score += 25;
+            
+            // Contains number
+            if (/\d/.test(password)) score += 25;
+            
+            // Contains lowercase
+            if (/[a-z]/.test(password)) score += 25;
+            
+            // Contains uppercase
+            if (/[A-Z]/.test(password)) score += 25;
+            
+            // Update strength bar color and width
+            strengthBar.style.width = score + '%';
+            if (score <= 25) {
+                strengthBar.className = 'h-1 rounded-full bg-red-500 transition-all duration-300';
+                strengthText.textContent = 'Weak password';
+                strengthText.className = 'text-xs mt-1 text-red-500';
+            } else if (score <= 50) {
+                strengthBar.className = 'h-1 rounded-full bg-orange-500 transition-all duration-300';
+                strengthText.textContent = 'Moderate password';
+                strengthText.className = 'text-xs mt-1 text-orange-500';
+            } else if (score <= 75) {
+                strengthBar.className = 'h-1 rounded-full bg-yellow-500 transition-all duration-300';
+                strengthText.textContent = 'Good password';
+                strengthText.className = 'text-xs mt-1 text-yellow-500';
+            } else {
+                strengthBar.className = 'h-1 rounded-full bg-green-500 transition-all duration-300';
+                strengthText.textContent = 'Strong password';
+                strengthText.className = 'text-xs mt-1 text-green-500';
+            }
+        }
+
+        function checkPasswordMatch() {
+            const password = document.getElementById('signupPassword').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+            const matchText = document.getElementById('password-match');
+            
+            if (confirmPassword) {
+                matchText.classList.remove('hidden');
+                if (password === confirmPassword) {
+                    matchText.textContent = 'Passwords match';
+                    matchText.className = 'text-xs mt-1 text-green-500';
+                } else {
+                    matchText.textContent = 'Passwords do not match';
+                    matchText.className = 'text-xs mt-1 text-red-500';
+                }
+            } else {
+                matchText.classList.add('hidden');
+            }
+        }
+
+        // Initialize with login form visible
+        document.addEventListener('DOMContentLoaded', () => {
+            switchForm('login');
+        });
+    </script>
+</body>
+</html>
