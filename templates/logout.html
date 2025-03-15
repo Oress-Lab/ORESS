@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Logout</title>
+    <script>
+        // Simulate logout process
+        function logout() {
+            // Clear session storage or cookies if needed
+            sessionStorage.clear(); // For example
+            // Redirect to login page after logout
+            window.location.href = 'index.html';
+        }
+
+        // Automatically log out the user when the page loads
+        window.onload = logout;
+    </script>
+</head>
+<body>
+    <h1>Logging you out...</h1>
+    <p>Thank you for using ORESS! You will be redirected to the login page shortly.</p>
+</body>
+</html>

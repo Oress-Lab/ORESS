@@ -1,0 +1,140 @@
+
+
+body {
+    font-family: 'Poppins', sans-serif !important;
+    background-color: #f1f1f1;
+    color: #fff;
+    font-size: 16px;
+    margin: 0;
+    padding: 0;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+    border-top: 6px #60C6D8 solid !important;
+}
+
+/* Navbar Styling for Contact and About Pages */
+.navbar {
+    box-shadow: none !important;
+    background-color: #2C2F33 !important;
+    padding: 10px;
+}
+
+.nav-link {
+    font-size: 14px !important;
+    font-family: Lato, sans-serif !important;
+    text-transform: capitalize !important;
+    color: #fff !important; /* White text */
+    margin-right: 20px; /* Consistent space between links */
+    background: transparent !important;
+}
+
+.nav-link:hover {
+    color: #60C6D8 !important; /* Light blue hover effect */
+    font-weight: bold !important;
+    background: transparent !important;
+}
+
+/* About Page Section */
+.about-title {
+    font-size: 36px;
+    color: #60C6D8;
+    margin-bottom: 10px;
+}
+
+.about-subtitle {
+    font-size: 18px;
+    color: #2C2F33;
+    margin-bottom: 40px;
+}
+
+/* Card title styling */
+.card-title {
+    font-size: 24px;
+    color: #60C6D8;
+    font-weight: bold;
+    margin-bottom: 20px;
+}
+
+/* About card styling */
+.about-card {
+    background-color: white;
+    color: #000000;
+    border-radius: 10px !important;
+    padding: 20px;
+    height: 400px; /* Fixed height */
+    width: 280px;  /* Fixed width */
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    transition: transform 0.2s ease-in-out;
+    margin-bottom: 20px; /* Ensure uniform spacing between cards */
+    text-align: center;  /* Align text to center */
+}
+
+.about-card .card-body {
+    overflow: hidden; /* Ensure text doesn't overflow */
+}
+
+.about-card:hover {
+    transform: scale(1.05);
+}
+
+/* Equal height and width for cards */
+.row {
+    display: flex;
+    justify-content: space-around; /* Ensure cards are evenly spaced */
+    flex-wrap: wrap;
+}
+
+.col-md-6 {
+    display: flex;
+    justify-content: center;
+}
+
+/* Mobile responsiveness */
+@media (max-width: 768px) {
+    .about-title {
+        font-size: 28px;
+    }
+
+    .about-subtitle {
+        font-size: 16px;
+    }
+
+    .card-title {
+        font-size: 20px;
+    }
+
+    .about-card {
+        width: 100%; /* Full width on smaller screens */
+        height: auto;
+    }
+}
+
+/* Footer Styling */
+.footer {
+    text-align: center;
+    padding: 30px;
+    color: #2C2F33;
+}
+
+.footer .nouridio {
+    font-family: 'Montserrat' !important;
+    font-style: normal !important;
+    font-weight: 600 !important;
+    font-size: 16px !important;
+    letter-spacing: 0.15em !important;
+    font-variant: small-caps !important;
+}
+
+.footer .nouridio a {
+    color: #60C6D8 !important;
+    text-decoration: none !important;
+    border-bottom: 2px solid #60C6D8 !important;
+    padding-bottom: 3px;
+}
+
+.footer .bot-footer {
+    color: #2C2F33 !important;
+}
