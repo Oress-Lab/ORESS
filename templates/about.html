@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <title>About ORESS</title>
+    <style>
+        .card-hover {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .card-hover:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+        .nav-hidden {
+            transform: translateY(-100%);
+        }
+        .nav-visible {
+            transform: translateY(0);
+        }
+        .page-content {
+            transition: transform 0.3s ease-out;
+        }
+        .menu-open .page-content {
+            transform: translateY(160px);
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-blue-50 to-indigo-50">
+    <!-- Floating Navbar -->
+    <nav class="fixed w-full bg-blue-600 text-white shadow-md z-50">
+        <div class="max-w-7xl mx-auto">
+            <div class="flex items-center justify-between px-6 py-4">
+                <div class="flex items-center">
+                    <img src="../static/assets/LOGO.svg" alt="Logo" class="h-12 w-12">
+                    <div class="hidden md:flex space-x-8 ml-8">
+                        <a href="{{ url_for('auth.index') }}" class="text-white hover:text-blue-100 font-medium transition-colors">Home</a>
+                        <a href="{{ url_for('contact.show_contact') }}" class="text-white hover:text-blue-100 font-medium transition-colors">Contact</a>
+                    </div>
+                </div>
+                <button id="mobile-menu-button" class="md:hidden text-white focus:outline-none">
+                    <i class="fas fa-bars text-xl"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Mobile Menu -->
+        <div id="mobile-menu" class="mobile-menu md:hidden bg-blue-600 overflow-hidden transition-all duration-300 max-h-0">
+            <div class="px-6 py-2 space-y-2">
+                <a href="{{ url_for('auth.index') }}" class="block py-2 text-white hover:bg-blue-700 rounded-md px-4">Home</a>
+                <a href="{{ url_for('contact.show_contact') }}" class="block py-2 text-white hover:bg-blue-700 rounded-md px-4">Contact</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Page Content -->
+    <div class="page-content pt-24 min-h-screen transition-transform duration-300">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+            <div class="text-center mb-16">
+                <h1 class="text-4xl font-bold text-gray-900 mb-4">About ORESS</h1>
+                <p class="text-xl text-gray-600">Redefining University Scheduling</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <!-- Story Card -->
+                <div class="card-hover bg-white rounded-2xl shadow-lg p-8 backdrop-blur-lg border border-white/30">
+                    <div class="flex items-center mb-6">
+                        <div class="bg-blue-100 p-3 rounded-lg">
+                            <svg class="w-8 h-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
+                            </svg>
+                        </div>
+                        <h2 class="text-2xl font-bold text-gray-900 ml-4">Our Story</h2>
+                    </div>
+                    <p class="text-gray-600 leading-relaxed">
+                        ORESS was born out of the frustration with outdated scheduling systems at NDU. 
+                        As a student developer, I saw an opportunity to create a solution that's both 
+                        intuitive and powerful. Our mission is to transform how students interact with 
+                        their academic schedules through clean design and smart features.
+                    </p>
+                </div>
+
+                <!-- About Me Card -->
+                <div class="card-hover bg-white rounded-2xl shadow-lg p-8 backdrop-blur-lg border border-white/30">
+                    <div class="flex items-center mb-6">
+                        <div class="bg-blue-100 p-3 rounded-lg">
+                            <svg class="w-8 h-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+                            </svg>
+                        </div>
+                        <h2 class="text-2xl font-bold text-gray-900 ml-4">The Developer</h2>
+                    </div>
+                    <p class="text-gray-600 leading-relaxed">
+                        Hi, I'm Kristen W. Kamouh - full-stack developer and problem solver. With a passion 
+                        for creating user-centric applications, I've poured countless hours into crafting 
+                        ORESS to meet student needs. When I'm not coding, you'll find me exploring new 
+                        technologies or contributing to open-source projects.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-white border-t border-gray-200 mt-24">
+        <div class="max-w-7xl mx-auto py-6 px-6">
+            <div class="flex flex-col md:flex-row justify-between items-center">
+                <div class="text-blue-600 mb-4 md:mb-0 flex items-center">
+                    <img src="../static/assets/LOGO.svg" alt="Footer Logo" class="h-10">
+                    <span class="ml-3 text-gray-600 italic">Made with <span class="text-red-500">❤</span> for NDU students</span>
+                </div>
+                <div class="text-center md:text-right text-gray-600">
+                    <div>&copy; <span id="copyright-year"></span> ORESS. All rights reserved.</div>
+                    <div class="mt-2">A project by <a href="#" class="text-blue-600 hover:text-blue-700 hover:underline">Kristen W. Kamouh</a></div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Mobile Menu Functionality
+        const mobileMenuButton = document.getElementById('mobile-menu-button');
+        const mobileMenu = document.getElementById('mobile-menu');
+        const pageContent = document.querySelector('.page-content');
+
+        mobileMenuButton.addEventListener('click', () => {
+            mobileMenu.classList.toggle('max-h-0');
+            mobileMenu.classList.toggle('max-h-64');
+            document.body.classList.toggle('menu-open');
+        });
+
+        // Close menu when clicking outside
+        document.addEventListener('click', (e) => {
+            if (!mobileMenu.contains(e.target) && !mobileMenuButton.contains(e.target)) {
+                mobileMenu.classList.add('max-h-0');
+                mobileMenu.classList.remove('max-h-64');
+                document.body.classList.remove('menu-open');
+            }
+        });
+
+        // Update copyright year
+        document.getElementById('copyright-year').textContent = new Date().getFullYear();
+    </script>
+</body>
+</html>

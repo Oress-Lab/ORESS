@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/timetable.css') }}">
+    
+    <!-- PDF Generation Libraries -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    
+    <!-- Application Scripts -->
+    <script src="{{ url_for('static', filename='js/timetable.js') }}" defer></script>
+    <script src="{{ url_for('static', filename='js/savetb.js') }}" defer></script>
+    <script src="{{ url_for('static', filename='js/search.js') }}" defer></script>
+    <title>Timetable - ORESS</title>
+
+</head>
+<body class="bg-gradient-to-br from-blue-50 to-indigo-50">
+    <!-- Floating Navbar -->
+    <nav class="fixed w-full bg-blue-600 text-white shadow-md z-50">
+        <div class="max-w-7xl mx-auto">
+            <div class="flex items-center justify-between px-6 py-4">
+                <div class="flex items-center">
+                    <img src="../static/assets/LOGO.svg" alt="Logo" class="h-12 w-12">
+                    <div class="hidden md:flex space-x-8 ml-8">
+                        <a href="{{ url_for('auth.index') }}" target="_blank" class="text-white hover:text-blue-100 font-medium transition-colors">Home</a>
+                        <a href="{{ url_for('static_pages.about') }}" target="_blank" class="text-white hover:text-blue-100 font-medium transition-colors">About</a>
+                        <a href="{{ url_for('contact.show_contact') }}" target="_blank" class="text-white hover:text-blue-100 font-medium transition-colors">Contact</a>
+                        <a href="{{ url_for('static_pages.help') }}" target="_blank" class="text-white hover:text-blue-100 font-medium transition-colors">Help</a>
+                        <a href="#campus-selection" class="flex items-center text-white hover:text-blue-100 font-medium transition-colors">
+                            <img src="../static/assets/change-campus.svg" alt="Change Campus" class="h-5 w-5 mr-2">
+                            Change Campus
+                        </a>
+                    </div>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <a href="{{ url_for('auth.logout') }}" class="hidden md:flex items-center text-white hover:text-blue-100 font-medium transition-colors">
+                        <i class="fas fa-sign-out-alt mr-2"></i>
+                        Logout
+                    </a>
+                    <button id="mobile-menu-button" class="md:hidden text-white focus:outline-none">
+                        <i class="fas fa-bars text-xl"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mobile Menu -->
+        <div id="mobile-menu" class="mobile-menu md:hidden bg-blue-600 overflow-hidden transition-all duration-300 max-h-0">
+            <div class="px-6 py-2 space-y-2">
+                <a href="{{ url_for('auth.index') }}" target="_blank" class="block py-2 text-white hover:bg-blue-700 rounded-md px-4">Home</a>
+                <a href="{{ url_for('static_pages.about') }}" target="_blank" class="block py-2 text-white hover:bg-blue-700 rounded-md px-4">About</a>
+                <a href="{{ url_for('contact.show_contact') }}" target="_blank" class="block py-2 text-white hover:bg-blue-700 rounded-md px-4">Contact</a>
+                <a href="{{ url_for('static_pages.help') }}" target="_blank" class="block py-2 text-white hover:bg-blue-700 rounded-md px-4">Help</a>
+                <a href="#campus-selection" class="flex items-center py-2 text-white hover:bg-blue-700 rounded-md px-4">
+                    <img src="../static/assets/change-campus.svg" alt="Change Campus" class="h-5 w-5 mr-2">
+                    Change Campus
+                </a>
+                <a href="{{ url_for('auth.logout') }}" class="flex items-center py-2 text-white hover:bg-blue-700 rounded-md px-4">
+                    <i class="fas fa-sign-out-alt mr-2"></i>
+                    Logout
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Page Content -->
+    <div class="page-content pt-24 min-h-screen transition-transform duration-300">
+        <div class="max-w-full mx-auto px-4 sm:px-6 lg:px-8 py-4">
+            <!-- Main Content Grid -->
+            <div class="container mx-auto flex space-x-4 h-[calc(100vh-280px)]">
+                <!-- Left Section -->
+                <div class="search-section h-full flex flex-col" style="width: 320px;">
+                    <!-- Search Section -->
+                    <div class="bg-white rounded-lg shadow-md p-4 h-full">
+                        <form id="searchForm" class="mb-2">
+                            <div class="search-container relative">
+                                <input
+                                    type="text"
+                                    id="searchInput"
+                                    name="query"
+                                    class="w-full px-4 py-2 pr-10 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                    placeholder="Search courses..."
+                                >
+                                <button type="submit" class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600">
+                                    <i class="fas fa-search"></i>
+                                </button>
+                            </div>
+                        </form>
+
+                        <!-- Expert Search Tips -->
+                        <div class="text-xs text-gray-500 mb-2 p-2 bg-gray-50 rounded-lg">
+                            <p>Expert Search:</p>
+                            <p>#MWF - Search by days (M,T,W,R,F)</p>
+                            <p>8:00 - Search by time</p>
+                            <p>Example: CSC #MWF 8:00</p>
+                            <p><u>Note:</u> Click on a course on the tb to remove it.</p>
+                        </div>
+
+                        <!-- Search Results -->
+                        <div id="searchResults" class="overflow-y-auto" style="height: calc(100% - 120px);">
+                            <ul class="space-y-4">
+                                {% if courses %}
+                                {% for course in courses %}
+                                <li class="p-4 bg-white rounded-lg shadow flex items-center justify-between cursor-pointer hover:bg-gray-100 transition"
+                                    data-course-code="{{ course.course_code }}"
+                                    data-course-name="{{ course.course_name }}"
+                                    data-course-time="{{ course.time }}"
+                                    data-course-room="{{ course.room }}"
+                                    data-course-instructor="{{ course.instructor }}"
+                                    data-course-prerequisite="{{ course.prerequisite }}"
+                                    onmouseover="showCourseShadow(this);"
+                                    onmouseout="removeCourseShadow();">
+                                    
+                                    <!-- Left: Checkbox -->
+                                    <div class="flex items-center">
+                                        <input type="checkbox" 
+                                            class="h-5 w-5 text-blue-600 border-gray-300 rounded focus:ring-blue-500 cursor-pointer course-checkbox"
+                                            onclick="toggleCourseSelection(this, '{{ course.course_code }}'); event.stopPropagation();">
+                                    </div>
+                    
+                                    <!-- Course Details (name and time) -->
+                                    <div class="text-left flex-1 pl-4">
+                                        <h4 class="font-semibold text-gray-900">{{ course.course_name }}</h4>
+                                        <p class="text-sm text-gray-500">{{ course.time }}</p>
+                                    </div>
+                                </li>
+                                {% endfor %}
+                                {% else %}
+                                <li class="p-4 bg-white rounded-lg shadow-md text-center text-gray-600">No courses found. Try typing the course code or name.</li>
+                                {% endif %}
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Timetable Section - Middle -->
+                <div class="flex-1 h-full">
+                    <div class="bg-white rounded-lg shadow-md p-6 h-full flex flex-col">
+                        <!-- Add download button -->
+                        <div class="flex justify-end mb-2">
+                            <a href="{{ url_for('timetable.download_timetable_pdf') }}" class="download-btn text-gray-600 hover:text-blue-600 transition-colors duration-200">
+                                <i class="fas fa-arrow-down mr-1"></i>
+                                <span class="download-tooltip">Download PDF</span>
+                            </a>
+                        </div>
+                        <div class="overflow-y-auto flex-1">
+                            <div id="schTimes" class="relative">
+                                <!-- Weekdays Row -->
+                                <div id="schDays" class="relative bg-white" style="position: sticky; top: 0; z-index: 10;">
+                                    <div class="day-header">Monday</div>
+                                    <div class="day-header">Tuesday</div>
+                                    <div class="day-header">Wednesday</div>
+                                    <div class="day-header">Thursday</div>
+                                    <div class="day-header">Friday</div>
+                                </div>
+                                
+                                <!-- Timetable lines and time slots -->
+                                <div class="relative">
+                                    <!-- Vertical day lines -->
+                                    <div class="day-line" style="left: 75px; top: 30px; height: 1080px;"></div>
+                                    <div class="day-line" style="left: 195px; top: 30px; height: 1080px;"></div>
+                                    <div class="day-line" style="left: 315px; top: 30px; height: 1080px;"></div>
+                                    <div class="day-line" style="left: 435px; top: 30px; height: 1080px;"></div>
+                                    <div class="day-line" style="left: 555px; top: 30px; height: 1080px;"></div>
+                                    <div class="day-line" style="left: 675px; top: 30px; height: 1080px;"></div>
+                                
+                                    <!-- Horizontal hour lines -->
+                                    <div class="hour-line" style="top: 72px; width: 615px;"></div>
+                                    <div class="hour-line" style="top: 144px; width: 615px;"></div>
+                                    <div class="hour-line" style="top: 216px; width: 615px;"></div>
+                                    <div class="hour-line" style="top: 288px; width: 615px;"></div>
+                                    <div class="hour-line" style="top: 360px; width: 615px;"></div>
+                                    <div class="hour-line" style="top: 432px; width: 615px;"></div>
+                                    <div class="hour-line" style="top: 504px; width: 615px;"></div>
+                                    <div class="hour-line" style="top: 576px; width: 615px;"></div>
+                                    <div class="hour-line" style="top: 648px; width: 615px;"></div>
+                                    <div class="hour-line" style="top: 720px; width: 615px;"></div>
+                                    <div class="hour-line" style="top: 792px; width: 615px;"></div>
+                                    <div class="hour-line" style="top: 864px; width: 615px;"></div>
+                                    <div class="hour-line" style="top: 936px; width: 615px;"></div>
+                                    <div class="hour-line" style="top: 1008px; width: 615px;"></div>
+                                    <div class="hour-line" style="top: 1080px; width: 615px;"></div>
+                                
+                                    <!-- Time labels on the left -->
+                                    <span class="time-label absolute" style="top: 64px; left: 14px;">8:00 AM</span>
+                                    <span class="time-label absolute" style="top: 136px; left: 14px;">9:00 AM</span>
+                                    <span class="time-label absolute" style="top: 208px; left: 10px;">10:00 AM</span>
+                                    <span class="time-label absolute" style="top: 280px; left: 10px;">11:00 AM</span>
+                                    <span class="time-label absolute" style="top: 352px; left: 10px;">12:00 PM</span>
+                                    <span class="time-label absolute" style="top: 424px; left: 14px;">1:00 PM</span>
+                                    <span class="time-label absolute" style="top: 496px; left: 14px;">2:00 PM</span>
+                                    <span class="time-label absolute" style="top: 568px; left: 14px;">3:00 PM</span>
+                                    <span class="time-label absolute" style="top: 640px; left: 14px;">4:00 PM</span>
+                                    <span class="time-label absolute" style="top: 712px; left: 14px;">5:00 PM</span>
+                                    <span class="time-label absolute" style="top: 784px; left: 14px;">6:00 PM</span>
+                                    <span class="time-label absolute" style="top: 856px; left: 14px;">7:00 PM</span>
+                                    <span class="time-label absolute" style="top: 928px; left: 14px;">8:00 PM</span>
+                                    <span class="time-label absolute" style="top: 1000px; left: 14px;">9:00 PM</span>
+                                </div>                                   
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right Section -->
+                <div class="w-80 flex flex-col space-y-4 h-full">
+                    <!-- Course Info Card - Smaller -->
+                    <div class="bg-white rounded-lg shadow-md p-4">
+                        <h3 class="text-lg font-semibold mb-2">Course Information</h3>
+                        <div id="courseInfo" class="text-sm text-gray-600">
+                            Hover on a course to view details
+                        </div>
+                    </div>
+                    
+                    <!-- Favorites Section -->
+                    <div class="bg-white rounded-lg shadow-md p-4 flex-1 overflow-y-auto">
+                        <h3 class="text-lg font-semibold mb-2">Favorites</h3>
+                        <div id="favoritesList" class="divide-y">
+                            <div class="p-2 text-gray-500 text-center">No favorites saved</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Campus Selection Bar -->
+            <div id="campus-selection" class="max-w-7xl mx-auto mt-8 mb-4">
+                <div class="bg-white rounded-lg shadow-md p-4">
+                    <div class="flex items-center justify-between">
+                        <!-- Current Enrollment Info -->
+                        <div class="text-gray-600">
+                            <span class="font-medium">Currently enrolled in:</span>
+                            <span class="ml-2">{{ session.get('semester_year', '').replace('_', ' ').title() }} / {{ session.get('campus', 'Main Campus').replace('_', ' ').title() }}</span>
+                        </div>
+
+                        <!-- Selection Controls -->
+                        <form id="campusForm" action="{{ url_for('timetable.set_semester_campus') }}" method="POST" class="flex items-center space-x-4">
+                            <div class="flex items-center space-x-2">
+                                <label class="text-sm font-medium text-gray-700">Change Campus:</label>
+                                <select name="campus" class="px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                                    <option value="main" {% if session.get('campus', 'main') == 'main' %}selected{% endif %}>Main Campus</option>
+                                    <option value="north_lebanon" {% if session.get('campus') == 'north_lebanon' %}selected{% endif %}>North Lebanon Campus</option>
+                                    <option value="shouf" {% if session.get('campus') == 'shouf' %}selected{% endif %}>Shouf Campus</option>
+                                </select>
+                            </div>
+                            <div class="flex items-center space-x-2">
+                                <label class="text-sm font-medium text-gray-700">Semester:</label>
+                                <select name="semester_year" class="px-3 py-2 text-sm border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                                    {% for semester_year in available_semesters_years %}
+                                        {% set parts = semester_year.split('_') %}
+                                        {% set semester = parts[0] %}
+                                        {% set year = parts[1] %}
+                                        <option value="{{ semester_year }}" 
+                                                {% if session.get('semester_year') == semester_year %}selected{% endif %}>
+                                            {{ semester|capitalize }} {{ year }}
+                                        </option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <button type="submit" class="px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors">
+                                Apply Changes
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Footer -->
+            <footer class="bg-white border-t border-gray-200 mt-24">
+                <div class="max-w-7xl mx-auto py-6 px-6">
+                    <div class="flex flex-col md:flex-row justify-between items-center">
+                        <div class="text-blue-600 mb-4 md:mb-0 flex items-center">
+                            <img src="../static/assets/LOGO.svg" alt="Footer Logo" class="h-10">
+                            <span class="ml-3 text-gray-600 italic">Made with <span class="text-red-500">❤</span> for NDU students</span>
+                        </div>
+                        <div class="text-center md:text-right text-gray-600">
+                            <div>&copy; <span id="copyright-year"></span> ORESS. All rights reserved.</div>
+                            <div class="mt-2">A project by <a href="#" class="text-blue-600 hover:text-blue-700 hover:underline">Kristen W. Kamouh</a></div>
+                        </div>
+                    </div>
+                </div>
+            </footer>
+        </div>
+    </div>
+</body>
+</html>
