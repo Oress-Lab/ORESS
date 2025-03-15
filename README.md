@@ -1,4 +1,4 @@
-# ORESS - Online Registration and Enrollment System for Students
+# ORESS - Online Registration and Enrollment Scheduling System
 
 ORESS is a web-based application designed to streamline the course registration and timetable management process for students. It provides an intuitive interface for searching courses, building schedules, and managing academic planning.
 
@@ -101,4 +101,4 @@ ORESS is a web-based application designed to streamline the course registration 
 
 ## Contact
 
-For questions or support, please contact [your-email@example.com](mailto:kamouhkristen@outlook.com)
+For questions or support, please contact [your-email@example.com](mailto:your-email@example.com)
